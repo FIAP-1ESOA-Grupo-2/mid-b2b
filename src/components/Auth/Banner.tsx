@@ -4,26 +4,12 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 export const Banner = () => {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
-    useEffect(() => {
-        const handleResize = () => {
-          setWindowWidth(window.innerWidth);
-        };
-    
-        window.addEventListener('resize', handleResize);
-    
-        return () => {
-          window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
-    const isLargerScreen = windowWidth > 640
-
-    return <Image 
-        src={isLargerScreen ? banner : mobileBanner} 
-        alt='Alt' 
-        priority
-        className=" h-auto"
-    />
+    return <div className='container'>
+        <div className='md:hidden'>
+            <Image src={mobileBanner} alt='Imagem do banner mobile'/>
+        </div>
+        <div className=''>
+            <Image src={banner} alt='Imagem do banner mobile' className='hidden md:block'/>
+        </div>
+    </div>
 }
