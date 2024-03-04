@@ -4,11 +4,11 @@ import Image from 'next/image'
 
 export const Banner = () => {
     return <div>
-        <div className='md:hidden sm:hidden'>
+        <div className='lg:hidden'>
             <Image src={mobileBanner} alt='Imagem do banner mobile'/>
         </div>
-        <div className='hidden sm:block'>
-            <Image src={banner} alt='Imagem do banner mobile'/>
+        <div className='hidden lg:block'>
+            <Image src={banner} alt='Imagem do banner'/>
         </div>
     </div>
 }
