@@ -31,3 +31,17 @@ model Interest {
   title     String
   createdAt DateTime @default(now())
 }
+
+model EmailVerification {
+  email String @unique
+  token String
+
+  @@map("email_verification_tokens")
+}
+
+model PasswordReset {
+  email String @unique
+  token String
+
+  @@map("password_reset_tokens")
+}
