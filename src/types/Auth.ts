@@ -6,6 +6,6 @@ export type User = {
     email: string;
     sector: string;
     role: string;
-    accountType: string;
+    accountType: "buyer" | "seller";
     createdAt: Date;
-}
+} 
