@@ -20,7 +20,7 @@ export const TipoConta = () => {
                     <nav className="flex flex-col gap-6">
                         <button
                             onClick={() => handleButtonClick('opcao1')}
-                            className={`text-base py-4 px-16 bg-mainblue border-2 border-mainblue rounded-lg text-mainblue text-white hover:bg-mainbluehover hover:border-mainbluehover
+                            className={`text-base py-4 px-16 bg-mainblue border-2 border-mainblue rounded-lg text-white hover:bg-mainbluehover hover:border-mainbluehover
                                 
                             `} type="button">
                             Comprador
@@ -28,7 +28,6 @@ export const TipoConta = () => {
                         <button
                             onClick={() => handleButtonClick('opcao2')}
                             className={`text-base py-4 px-16 bg-transparent border-2 border-mainblue rounded-lg text-mainblue hover:bg-mainbluehover hover:border-mainbluehover hover:text-white
-                                ${opcaoSelecionada === 'opcao2' ? 'bg-mainblue text-formbg' : 'bg-transparent'}
                             `} type="button">
                             Vendedor
                         </button>
