@@ -8,7 +8,7 @@ export const Banner = () => {
             <Image src={mobileBanner} alt='Imagem do banner mobile'/>
         </div>
         <div className='hidden lg:block'>
-            <Image src={banner} alt='Imagem do banner'/>
+            <Image src={banner} alt='Imagem do banner' className='max-h-screen'/>
         </div>
     </div>
 }
