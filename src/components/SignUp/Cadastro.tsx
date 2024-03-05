@@ -96,7 +96,7 @@ export const Cadastro = () => {
                 </div>
                 <div className="flex bg-formbg rounded-lg">
                     <input
-                        type={showPassword ? 'text' : 'password'}
+                        type={showConfirmPassword ? 'text' : 'password'}
                         id="confirmPassword"
                         required
                         minLength={8}
