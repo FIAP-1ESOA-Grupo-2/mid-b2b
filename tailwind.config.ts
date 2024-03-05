@@ -19,14 +19,14 @@ const config = {
     },
     extend: {
       colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
         mainblue: "#00ACFF",
         mainbluehover: "#008ED2",
         forminput: "#969696",
         formbg: "#F4F5FF",
         textgrey: "#B5B5B5",
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
