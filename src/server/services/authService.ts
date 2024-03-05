@@ -14,11 +14,20 @@ export const createUser = async (
     password: string,
     accountType: "buyer" | "seller",
     phoneNumber?: string,
-) => {
-    if (await prisma.user.findUnique({ where: { email } })) return;
+): Promise<{ error?: string }> => {
+    if (await prisma.user.findUnique({ where: { email } })) {
+        return {
+            error: 'Email já está sendo usado.'
+        }
+    };
 
     await prisma.user.create({
         data: { name, email, cpf, sector, role, accountType, password, phoneNumber }
     })
+
+    return { error: '' }
+}
+
+export const deleteUser = async () => {
 
 }

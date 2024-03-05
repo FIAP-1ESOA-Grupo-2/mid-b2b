@@ -1,6 +1,6 @@
 'use client'
 import { Banner } from "@/components/Auth/Banner";
-import { TelaCadastro } from "@/components/SignUp/TelaCadastro";
+import { TelaCadastro } from "@/components/Auth/SignUp/TelaCadastro";
 
 
 export default () => {

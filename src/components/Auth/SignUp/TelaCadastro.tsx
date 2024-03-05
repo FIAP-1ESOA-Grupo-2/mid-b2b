@@ -7,16 +7,10 @@ export const TelaCadastro = () => {
     return (
         <section className="overflow-x-hidden sm:flex flex-col mx-auto my-auto">
             <section className="my-auto">
-<<<<<<< Updated upstream
-                <Voltar />
-                <Cadastro/>
-                {/* <TipoConta /> */}
-=======
-              <Voltar />
-                <Cadastro/>  
-                {/*<TipoConta /> 
->>>>>>> Stashed changes
-                {/* <Interesses /> */}
+                {/*<Voltar />
+                <Cadastro/>  }
+                {/*<TipoConta /> */}
+                <Interesses />
             </section>
         </section>
     )

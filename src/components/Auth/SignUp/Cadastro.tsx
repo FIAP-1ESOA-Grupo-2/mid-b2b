@@ -25,15 +25,15 @@ export const Cadastro = () => {
     const handlePhoneNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value.replace(/\D/g, '')
         let formattedInput = ''
-
+    
         if (input.length <= 2) {
-            formattedInput = `(${input}`
+          formattedInput = `(${input}`
         } else if (input.length <= 6) {
-            formattedInput = `(${input.slice(0, 2)}) ${input.slice(2)}`
+          formattedInput = `(${input.slice(0, 2)}) ${input.slice(2)}`
         } else {
-            formattedInput = `(${input.slice(0, 2)}) ${input.slice(2, 6)}-${input.slice(6)}`
+          formattedInput = `(${input.slice(0, 2)}) ${input.slice(2, 6)}-${input.slice(6)}`
         }
-
+    
         setNumber(formattedInput);
     };
 
@@ -51,28 +51,28 @@ export const Cadastro = () => {
         <section className="m-4 p-4 max-h-screen">
             <h1 className="text-3xl mb-5">Cadastro</h1>
             <form className="flex flex-col gap-5">
+                <input 
+                    placeholder="Nome completo" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    type="text" 
+                    required 
+                    className="w-full text-base bg-formbg rounded-lg text-forminput py-5 pl-6 outline-none pr-6"/>
+                <input 
+                    placeholder="E-mail" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    type="email" 
+                    required className="w-full text-base bg-formbg rounded-lg text-forminput py-5 pl-6 outline-none  pr-6"/>
                 <input
-                    placeholder="Nome completo"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    type="text"
-                    required
-                    className="w-full text-base bg-formbg rounded-lg text-forminput py-5 pl-6 outline-none pr-6" />
-                <input
-                    placeholder="E-mail"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    type="email"
-                    required className="w-full text-base bg-formbg rounded-lg text-forminput py-5 pl-6 outline-none  pr-6" />
-                <input
-                    placeholder="Número de telefone"
-                    value={number}
-                    onChange={handlePhoneNumberChange}
+                    placeholder="Número de telefone" 
+                    value={number} 
+                    onChange={handlePhoneNumberChange} 
                     required
                     id="number"
-                    type="text"
+                    type="text"  
                     maxLength={14}
-                    className="w-full text-base bg-formbg rounded-lg text-forminput py-5 pl-6 outline-none  pr-6" />
+                    className="w-full text-base bg-formbg rounded-lg text-forminput py-5 pl-6 outline-none  pr-6"/>
                 <div className="flex bg-formbg rounded-lg">
                     <input
                         type={showPassword ? 'text' : 'password'}
@@ -84,14 +84,14 @@ export const Cadastro = () => {
                         title="Pelo menos um caractere especial é necessário"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-
+                            
                         placeholder="Senha"
-                        className="w-full text-base bg-transparent text-forminput py-5 pl-6 outline-none" />
+                        className="w-full text-base bg-transparent text-forminput py-5 pl-6 outline-none"/>
                     <button
                         type="button"
                         className="mx-6"
                         onClick={handleTogglePassword}>
-                        {showPassword ? <FaEye size={18} color={mainblueIcons} /> : <FaEyeSlash size={18} color={mainblueIcons} />}
+                        {showPassword ? <FaEye size={18} color={mainblueIcons}/> : <FaEyeSlash size={18} color={mainblueIcons}/>}
                     </button>
                 </div>
                 <div className="flex bg-formbg rounded-lg">
@@ -106,12 +106,12 @@ export const Cadastro = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Confirme sua senha"
-                        className="w-full text-base bg-transparent text-forminput py-5 pl-6 outline-none" />
+                        className="w-full text-base bg-transparent text-forminput py-5 pl-6 outline-none"/>
                     <button
                         type="button"
                         className="mx-6"
                         onClick={handleToggleConfirmPassword}>
-                        {showConfirmPassword ? <FaEye size={18} color={mainblueIcons} /> : <FaEyeSlash size={18} color={mainblueIcons} />}
+                        {showConfirmPassword ? <FaEye size={18} color={mainblueIcons}/> : <FaEyeSlash size={18} color={mainblueIcons}/>}
                     </button>
                 </div>
                 <button onSubmit={handleSubmit} type="submit" className="bg-mainblue text-formbg py-4 text-base rounded-lg shadow-xl hover:bg-mainbluehover duration-100 ease-in-out">Registrar</button>
@@ -119,9 +119,9 @@ export const Cadastro = () => {
             <p className="text-center text-forminput my-7 text-base">ou continue com</p>
             <nav>
                 <ul className="flex items-center justify-center gap-5 cursor-pointer mb-5">
-                    <li><a href="#"><FaFacebook size={40} color={mainblueFace} /></a></li>
-                    <li><a href="#"></a><FaApple size={40} /></li>
-                    <li><a href="#"><FcGoogle size={40} /></a></li>
+                    <li><a href="#"><FaFacebook size={40} color={mainblueFace}/></a></li>
+                    <li><a href="#"></a><FaApple size={40}/></li>
+                    <li><a href="#"><FcGoogle size={40}/></a></li>
                 </ul>
             </nav>
         </section>
