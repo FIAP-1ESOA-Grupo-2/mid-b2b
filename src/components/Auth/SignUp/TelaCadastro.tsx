@@ -5,7 +5,7 @@ import { TipoConta } from "./TipoConta"
 
 export const TelaCadastro = () => {
     return (
-        <section className="overflow-x-hidden sm:flex flex-col mx-auto my-auto">
+        <section className="overflow-x-hidden sm:flex flex-col mx-auto my-auto w-full">
             <section className="my-auto">
                 {/*<Voltar />
                 <Cadastro/>  }

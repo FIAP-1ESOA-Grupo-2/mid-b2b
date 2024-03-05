@@ -10,7 +10,7 @@ export default () => {
             <div className="">
                 <Banner />
             </div>
-            <div className="mx-auto w-96">
+            <div className="mx-auto w-1/2">
                 <TelaCadastro />
             </div>
         </main>
