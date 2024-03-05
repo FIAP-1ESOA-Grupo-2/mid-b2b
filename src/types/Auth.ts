@@ -1,3 +1,5 @@
+export type UserAccountType = "buyer" | "seller";
+
 export type User = {
     id: number;
     name: string;
@@ -6,6 +8,6 @@ export type User = {
     email: string;
     sector: string;
     role: string;
-    accountType: "buyer" | "seller";
+    accountType: UserAccountType;
     createdAt: Date;
 } 

@@ -1,5 +1,6 @@
 "use server"
 
+import { User, UserAccountType } from '@/types/Auth';
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt';
 
@@ -30,7 +31,7 @@ export const createUser = async (
     return { error: '' }
 }
 
-export const checkUser = async (email_or_cpf: string, password: string) => {
+export const checkUser = async (email_or_cpf: string, password: string): Promise<User | null> => {
     const user = await prisma.user.findFirst({
         where: {
             OR: [
@@ -41,10 +42,19 @@ export const checkUser = async (email_or_cpf: string, password: string) => {
     })
 
     if (user && await bcrypt.compare(password, user.password)) {
-        return true
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            cpf: user.cpf,
+            sector: user.sector,
+            role: user.role,
+            accountType: user.accountType as UserAccountType,
+            createdAt: user.createdAt
+        }
     }
 
-    return false
+    return null
 }
 
 export const deleteUser = async (id: number) => {
