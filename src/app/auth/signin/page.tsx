@@ -28,16 +28,15 @@ export default () => {
     }
 
     return (
-        <div className='grid grid-cols-2'>
-            <div className="col-span-1">
+        <div className='h-screen sm:flex flex-col items-center justify-center lg:grid grid-cols-2'>
+            <div className="col-span-1 max-w-full">
                 <Banner/>
             </div>
-            {/* Login */}
-            <div className="flex flex-col items-center justify-center col-span-1">
-                <h1 className="text-3xl mb-6 font-bold">Faça seu Login</h1>
-                <form>
-                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="email" placeholder="Email" className="w-full mb-6 text-base rounded-lg bg-formbg px-8 py-5 outline-none"/>
-                    <div className="w-full flex items-center bg-formbg mb-6 px-8 py-5 ">
+            <div className="flex flex-col items-center justify-center col-span-1 mx-10">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl mb-6 font-bold">Faça seu Login</h1>
+                <form className="w-full md:w-96 lg:w-1/2 xl:w-2/3">
+                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} id="email" placeholder="Email" className="w-full mb-6 text-base md:text-lg rounded-lg bg-formbg px-4 md:px-8 py-4 md:py-5 outline-none"/>
+                    <div className="w-full flex items-center bg-formbg mb-6 px-4 md:px-8 py-4 md:py-5">
                         <input
                             type={showPassword ? 'text' : 'password'}
                             id="password"
@@ -45,7 +44,7 @@ export default () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Enter your password"
-                            className="w-full text-base rounded-lg bg-transparent outline-none mr-2"
+                            className="w-full text-base md:text-lg rounded-lg bg-transparent outline-none mr-2"
                         />
                         <button
                             type="button"
@@ -55,14 +54,14 @@ export default () => {
                             {showPassword ? <FaEye color={mainblueIcons}/> : <FaEyeSlash color={mainblueIcons}/>}
                         </button>
                     </div>
-                    <div className="flex text-xs text-textgrey justify-between mb-8">
-                        <div className="flex items-center gap-2">
-                            <input type="checkbox" id="remember" checked={isToggled} onChange={handleToggle}/> 
+                    <div className="flex flex-col md:flex-row text-xs md:text-sm text-textgrey justify-between mb-8">
+                        <div className="fflex items-center gap-2 mb-4 md:mb-0">
+                            <input type="checkbox" id="remember" checked={isToggled} onChange={handleToggle} className="mr-2"/> 
                             <label htmlFor="remember">Lembrar senha</label>
                         </div>
                         <a href="#">Esqueceu sua senha?</a>
                     </div>
-                    <button type="submit" onClick={handleSubmit} className="w-full text-base bg-mainblue rounded-lg text-white px-40 py-5 hover:bg-mainbluehover ease-in-out duration-100">
+                    <button type="submit" onClick={handleSubmit} className="w-full text-base md:text-lg bg-mainblue rounded-lg text-white px-6 md:px-12 py-4 md:py-5 hover:bg-mainbluehover ease-in-out duration-100">
                         Login
                     </button>
                 </form>
