@@ -3,8 +3,6 @@
 import { checkUser, createUser } from "@/server/services/authService";
 import { signIn, useSession } from "next-auth/react";
 
-
-
 export default () => {
     const user = useSession()
 

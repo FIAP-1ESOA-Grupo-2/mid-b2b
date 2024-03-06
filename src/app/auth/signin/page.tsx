@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { Banner } from "@/components/Auth/Banner"
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaFacebook, FaApple } from "react-icons/fa";
@@ -9,7 +10,7 @@ import { signInSchema } from "@/lib/validators/userValidator";
 import { useToast } from "@chakra-ui/react";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next13-progressbar';
 
 type Inputs = z.infer<typeof signInSchema>
 
