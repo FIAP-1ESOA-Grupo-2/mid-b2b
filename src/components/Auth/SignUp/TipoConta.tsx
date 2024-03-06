@@ -1,38 +1,53 @@
 import Image from 'next/image'
 import logoteste from '@/assets/images/logoteste.svg'
-import { useState } from "react";
 import imageMobile from '@/assets/images/Illustrationsignup.svg'
+import Link from 'next/link';
+import { UserAccountType } from '@/types/Auth';
+import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
+import { goToNextStep, setData } from '@/redux/reducers/signUpReducer';
+
 
 export const TipoConta = () => {
-    const [opcaoSelecionada, setOpcaoSelecionada] = useState<string | null>(null);
-    const handleButtonClick = (opcao: string) => {
-        setOpcaoSelecionada(opcao);
+    const dispatch = useAppDispatch()
+    const signUpData  = useAppSelector(state => state.signUp.data)
+
+    const handleButtonClick = (value: UserAccountType) => {
+        dispatch(setData({ ...signUpData, accountType: value }));
+        dispatch(goToNextStep())
     };
+
     return (
-        <section className="sm:flex flex-col mx-auto overflow-y-hidden h-screen justify-center">
-            <nav className="ml-10 mt-10 lg:hidden">
-                <Image src={logoteste} alt="logo teste"/>
-            </nav>
-            <section className="flex flex-col items-center justify-center p-4 h-screen ">
-            <Image src={imageMobile} alt="Ilustração" className="mx-auto"/>
-                <section>
-                    <h1 className="text-4xl text-center my-12">Selecione o tipo de conta</h1>
-                    <nav className="flex flex-col gap-6">
+        <section className="sm:flex flex-col mx-auto  mt-12 justify-center">
+            {/*#TODO Alterar imagem dos logos*/}
+
+            <div className="ml-10 mt-10 lg:hidden">
+                <Image src={logoteste} alt="logo teste" />
+            </div>
+            <section className="flex flex-col items-center justify-center p-4  ">
+                <Image src={imageMobile} alt="Ilustração" className="mx-auto" />
+
+                <section className='mt-6'>
+                    <h1 className="text-3xl font-bold text-center">Selecione o tipo de conta</h1>
+                    <p className=' mb-12 max-w-md text-center text-slate-700 text-sm'>
+                        Escolha com qual tipo de conta deseja se registrar!  Você poderá alterar depois o tipo da sua conta a qualquer momento.
+                    </p>
+
+                    <div className="flex flex-col gap-6">
                         <button
-                            onClick={() => handleButtonClick('opcao1')}
-                            className={`text-base py-4 px-16 bg-mainblue border-2 border-mainblue rounded-lg text-white hover:bg-mainbluehover hover:border-mainbluehover
-                                
-                            `} type="button">
+                            onClick={() => handleButtonClick('buyer')}
+                            className={`text-base py-4 px-16  border-2 border-mainblue transition-all  ${signUpData.accountType === 'buyer' ? 'bg-mainblue text-white' : 'text-mainblue hover:bg-mainblue hover:border-mainblue hover:text-white'}  rounded-lg  `} type="button">
                             Comprador
                         </button>
                         <button
-                            onClick={() => handleButtonClick('opcao2')}
-                            className={`text-base py-4 px-16 bg-transparent border-2 border-mainblue rounded-lg text-mainblue hover:bg-mainbluehover hover:border-mainbluehover hover:text-white
-                            `} type="button">
+                            onClick={() => handleButtonClick('seller')}
+                            className={`text-base py-4 px-16  border-2 border-mainblue transition-all ${signUpData.accountType === 'seller' ? 'bg-mainblue text-white' : 'text-mainblue hover:bg-mainblue hover:border-mainblue hover:text-white'}  rounded-lg `} type="button">
                             Vendedor
                         </button>
-                    </nav>
-                    <p className="text-center my-11">Já tem uma conta? <a className="text-mainblue" href="#">Faça log in</a></p>
+                    </div>
+                    <p className="text-center my-11">
+                        Já tem uma conta?
+                        <Link className="text-mainblue hover:text-mainbluehover hover:underline font-semibold" href="/auth/signin"> Faça login</Link>
+                    </p>
                 </section>
             </section>
         </section>
