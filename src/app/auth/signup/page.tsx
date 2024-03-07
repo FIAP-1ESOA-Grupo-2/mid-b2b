@@ -1,18 +1,16 @@
-'use client'
-import { Banner } from "@/components/Auth/Banner";
-import { TelaCadastro } from "@/components/Auth/SignUp/TelaCadastro";
+import SignUp from "@/components/pages/SignUp";
+import { Metadata } from "next";
 
-
-export default () => {
-
-    return (
-        <main className="h-screen flex items-center">
-            <div className="">
-                <Banner />
-            </div>
-            <div className="mx-auto w-1/2">
-                <TelaCadastro />
-            </div>
-        </main>
-    )   
+export const metadata: Metadata = {
+    title: 'Crie sua conta'
 }
+
+const SignUpPage = () => {
+    return (
+        <main>
+            <SignUp />
+        </main>
+    )
+}
+
+export default SignUpPage
