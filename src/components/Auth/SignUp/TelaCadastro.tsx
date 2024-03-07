@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react'
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp"
 import { goToStep } from "@/redux/reducers/signUpReducer"
+import { EmailConfirm } from "./EmailConfirm"
 
 const steps = [
     { title: 'Tipo de Conta', description: 'Escolha o tipo de conta' },
@@ -91,6 +92,10 @@ export default () => {
                 }
 
                 {activeStep == 2 &&
+                    <EmailConfirm />
+                }
+
+                {activeStep == 3 &&
                     <Interesses />
                 }
             </div>

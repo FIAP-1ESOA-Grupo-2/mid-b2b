@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CiSearch } from "react-icons/ci";
+import { MdOutlineSearch } from "react-icons/md";
 import { IoIosAdd } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
 import {
@@ -65,11 +65,15 @@ export const Interesses = () => {
         setNewTodo('')
     }
     return (
-        <section className="m-4 p-4">
-            <h1 className="text-3xl font-bold">Interesses</h1>
-            <div className="flex items-center bg-formbg my-3 p-4 rounded-xl">
-                <CiSearch size={30} color="formbg" className="mr-3" />
-                <input className="text-xl text-slate-200 w-full bg-transparent outline-none focus:text-slate-500"
+        <section className="m-4 p-4 max-w-screen-md mx-auto">
+            <h1 className="text-3xl font-bold text-center">Interesses</h1>
+            <p className='mb-6 text-center text-slate-700 text-sm'>
+                Escolha seus interesses ou adicione novos, e eles serão visíveis para todos os usuários.
+            </p>
+
+            <div className="flex gap-2 items-center bg-formbg py-3 px-5 mt-5 rounded-lg">
+                <MdOutlineSearch size={26} className="text-neutral-500" />
+                <input className="text-forminput w-full bg-transparent outline-none focus:text-zinc-600 "
                     type="text"
                     value={searchQuery}
                     onChange={(e) => {
@@ -80,9 +84,9 @@ export const Interesses = () => {
             </div>
             <Dialog>
                 <DialogTrigger asChild>
-                    <button className="flex items-center bg-mainblue rounded-lg w-full justify-center text-formbg text-lg my-4">
-                        <IoIosAdd />
-                        <h2 className="py-3">Adicionar novo interesse</h2>
+                    <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md my-4">
+                        <IoIosAdd size={30} />
+                        <h3 className="py-2.5 font-semibold">Adicionar novo interesse</h3>
                     </button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -111,14 +115,14 @@ export const Interesses = () => {
                 </DialogContent>
             </Dialog>
 
-            <div className=" overflow-auto max-h-[calc(100vh-400px)]  pl-1">
+            <div className="  pl-1">
                 <p className="text-mainblue text-base">Escolha mais de 3 interesses</p>
                 <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 ">
                     {todos.map((todo) => (
                         <li key={todo.id}
-                            className="px-5 py-4 bg-formbg text-xl rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit">
+                            className="px-3 py-2 bg-formbg text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit">
                             <FaPlus color="#00ACFF" className="mr-3" />
-                            {todo.text}
+                            <span className="text-forminput">  {todo.text}</span>
                         </li>
                     ))}
                 </ul>

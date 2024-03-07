@@ -30,8 +30,8 @@ export const signUpReducer = createSlice({
         goToStep: (state, action: PayloadAction<SignUpState['step']>) => {
             if (
                 (action.payload >= 0 && action.payload <= 1 && state.data.accountType) ||
-                (action.payload >= 1 && action.payload <= 2 && state.data.name && state.data.cpf && state.data.email && state.data.password && state.data.sector && state.data.role) ||
-                (action.payload >= 2 && action.payload <= 3 && state.data.emailVerified)
+                (action.payload >= 1 && action.payload <= 2 && state.data.name && state.data.cpf && state.data.email && state.data.password) ||
+                (action.payload >= 2 && action.payload <= 3)
             ) {
                 state.step = action.payload
             }
@@ -39,7 +39,7 @@ export const signUpReducer = createSlice({
         goToNextStep: (state) => {
             if (
                 (state.step == 0 && state.data.accountType) ||
-                (state.step == 1 && state.data.name && state.data.cpf && state.data.email && state.data.password && state.data.sector && state.data.role) ||
+                (state.step == 1 && state.data.name && state.data.cpf && state.data.email && state.data.password) ||
                 (state.step == 2 && state.data.emailVerified)
             ) {
                 state.step += 1

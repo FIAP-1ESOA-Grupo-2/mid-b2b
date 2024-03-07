@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { signUpSchema } from "@/lib/validators/userValidator";
-import { setData } from "@/redux/reducers/signUpReducer";
+import { goToNextStep, setData } from "@/redux/reducers/signUpReducer";
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, ChangeEvent, useEffect } from "react";
@@ -23,7 +23,9 @@ export const Cadastro = () => {
         resolver: zodResolver(signUpSchema)
     })
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => { console.log(data) }
+    const onSubmit: SubmitHandler<Inputs> = () => {
+        dispatch(goToNextStep())
+     }
 
     const handleValueChange = (e: ChangeEvent<HTMLInputElement>, key: keyof typeof signUpData) => {
         dispatch(setData({ ...signUpData, [key]: e.target.value }))
@@ -71,7 +73,7 @@ export const Cadastro = () => {
         <section className="mt-6  max-h-screen max-w-screen-md mx-auto">
             <h1 className="text-3xl font-bold text-center">Preencha seus dados</h1>
             <p className='mb-6 text-center text-slate-700 text-sm'>
-                Preencha os dados abaixo para se avancar no processo de cadastro
+                Preencha os dados abaixo para avançar no processo de cadastro!
             </p>
 
             <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
