@@ -16,7 +16,7 @@ export const Providers = ({ children }: Props) => {
             <SessionProvider>
                 <Next13ProgressBar height="4px" color="#0a6cff" options={{ showSpinner: true }} showOnShallow />
 
-                <ChakraProvider>
+                <ChakraProvider disableGlobalStyle>
                     {children}
                 </ChakraProvider>
             </SessionProvider>

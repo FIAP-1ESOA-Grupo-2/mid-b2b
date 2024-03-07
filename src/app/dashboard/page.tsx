@@ -1,24 +1,22 @@
-"use client";
-
+import { authConfig } from "@/config/auth";
 import { checkUser, createUser } from "@/server/services/authService";
+import { getServerSession } from "next-auth";
 import { signIn, useSession } from "next-auth/react";
 
-const DashboardPage = () => {
-    const user = useSession()
+const DashboardPage = async () => {
+    const user = await getServerSession(authConfig)
 
     const handleCreateUser = async () => {
-        console.log(await signIn("credentials", { email_or_cpf: "gS0yT@example.com2", password: "123456789", redirect: false }))
+        console.log(await createUser("Teste", "dev@example.com", "123.456.789-10", "Teste", "buyer", "123456", "buyer", "123456789"))
     }
 
     return (
         <>
-            STATUS: <mark>{user.status}</mark>
+            STATUS: <mark>{user?.user ? "Conectado" : "Desconectado"}</mark>
             <br />
             <br />
             <hr />
-            <pre>{JSON.stringify(user.data)}</pre>
-
-            <button onClick={handleCreateUser}>Create User</button>
+            <pre>{JSON.stringify(user?.user)}</pre> 
         </>
 
     )

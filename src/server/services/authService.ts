@@ -47,6 +47,7 @@ export const checkUser = async (email_or_cpf: string, password: string): Promise
             name: user.name,
             email: user.email,
             cpf: user.cpf,
+            phone_number: user.phoneNumber,
             sector: user.sector,
             role: user.role,
             accountType: user.accountType as UserAccountType,
