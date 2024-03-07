@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { signUpSchema } from "@/lib/validators/userValidator";
-import { goToNextStep, setData } from "@/redux/reducers/signUpReducer";
+import { goToNextStep, goToStep, setData } from "@/redux/reducers/signUpReducer";
+import { sendEmailVerification } from "@/server/services/authService";
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, ChangeEvent, useEffect } from "react";
@@ -23,9 +24,19 @@ export const Cadastro = () => {
         resolver: zodResolver(signUpSchema)
     })
 
-    const onSubmit: SubmitHandler<Inputs> = () => {
-        dispatch(goToNextStep())
-     }
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        if (!signUpData.emailVerified) {
+            toast.promise(sendEmailVerification(data.email), {
+                success: { title: 'Email enviado com sucesso!ﾠﾠﾠﾠ', description: 'Insira o código de verificação...', position: 'top-right' },
+                error: { title: 'Estamos em manutenção', description: 'Por favor tente mais tarde' },
+                loading: { title: 'Enviando o email de verificação!', description: 'Por favor aguarde...', position: 'top-right' },
+            })
+
+            dispatch(goToNextStep())
+        } else {
+            dispatch(goToStep(3))
+        }
+    }
 
     const handleValueChange = (e: ChangeEvent<HTMLInputElement>, key: keyof typeof signUpData) => {
         dispatch(setData({ ...signUpData, [key]: e.target.value }))
@@ -100,8 +111,8 @@ export const Cadastro = () => {
                 <div className="-mb-3">
                     <input
                         placeholder="E-mail *"
-                        {...register("email", { value: signUpData.email, onChange: e => handleValueChange(e, 'email') })}
-                        className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.email ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
+                        {...register("email", { value: signUpData.email, onChange: signUpData.emailVerified ? undefined : e => handleValueChange(e, 'email') })}
+                        className={`w-full text-base transition-all border-2 ${signUpData.emailVerified ? 'bg-slate-200 text-zinc-400 border-slate-300 pointer-events-none' : 'bg-formbg text-forminput'} rounded-lg  py-3 px-4 outline-none  focus:text-zinc-600 ${errors.email ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
                     />
                     <small className="ml-2 text-red-600 font-semibold0">{errors.email?.message}</small>
                 </div>
