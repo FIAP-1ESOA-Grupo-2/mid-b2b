@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Voltar } from "../Voltar/Voltar"
 import { Cadastro } from "./Cadastro"
 import { Interesses } from "./Interesses"
 import { TipoConta } from "./TipoConta"
@@ -35,7 +34,7 @@ export default () => {
     const signUp = useAppSelector(state => state.signUp)
     const dispatch = useAppDispatch()
 
-    const { activeStep, setActiveStep, goToNext } = useSteps({
+    const { activeStep, setActiveStep } = useSteps({
         index: 0,
         count: steps.length,
     })
@@ -57,7 +56,7 @@ export default () => {
         <div className="flex flex-col overflow-none  h-screen max-w-screen-xl mx-4 xl:mx-auto">
             <Stepper
                 index={activeStep}
-                className="px-6 my-6 py-2 border border-slate-200 rounded-lg bg-slate-50 select-none"
+                className="px-6 my-6 py-2 border border-slate-200 rounded-lg bg-slate-50 select-none "
                 orientation={width != 0 && width < 920 ? 'vertical' : 'horizontal'}
             >
                 {steps.map((step, index) => (
@@ -72,8 +71,8 @@ export default () => {
                             </StepIndicator>
 
                             <Box flexShrink='0' className="truncate">
-                                <StepTitle style={{ fontWeight: 600 }}>{step.title}</StepTitle>
-                                <StepDescription>{step.description}</StepDescription>
+                                <StepTitle style={{ fontWeight: activeStep == index ? 700 : 600 }} className={activeStep == index ? 'text-sky-600 ' : ''}>{step.title}</StepTitle>
+                                <StepDescription className={activeStep == index ? 'text-sky-600' : ''}>{step.description}</StepDescription>
                             </Box>
                         </div>
 

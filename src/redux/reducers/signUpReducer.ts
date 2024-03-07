@@ -31,7 +31,7 @@ export const signUpReducer = createSlice({
             if (
                 (action.payload >= 0 && action.payload <= 1 && state.data.accountType) ||
                 (action.payload >= 1 && action.payload <= 2 && state.data.name && state.data.cpf && state.data.email && state.data.password) ||
-                (action.payload >= 2 && action.payload <= 3)
+                (action.payload >= 2 && action.payload <= 3 && state.data.emailVerified)
             ) {
                 state.step = action.payload
             }
