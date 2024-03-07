@@ -5,10 +5,12 @@ export const metadata: Metadata = {
     title: 'Faça seu Login'
 }
 
-export default () => {
+const SignInPage = () => {
     return (
         <main>
             <SignIn />
         </main>
     )
 }
+
+export default SignInPage

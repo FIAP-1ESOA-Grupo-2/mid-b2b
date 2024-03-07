@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-export default () => {
+const HomePage = () => {
 
   return (
     <div>
@@ -12,3 +12,5 @@ export default () => {
     </div>
   )
 }
+
+export default HomePage
