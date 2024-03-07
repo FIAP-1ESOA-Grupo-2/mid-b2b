@@ -1,5 +1,6 @@
 "use server"
 
+import { mailConfig } from '@/config/mail';
 import { User, UserAccountType } from '@/types/Auth';
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt';
@@ -60,4 +61,33 @@ export const checkUser = async (email_or_cpf: string, password: string): Promise
 
 export const deleteUser = async (id: number) => {
     await prisma.user.delete({ where: { id } })
+}
+
+export const sendEmailVerification = async (email: string) => {
+    const token = `${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`
+
+    if (await prisma.emailVerification.findUnique({ where: { email } })) {
+        await prisma.emailVerification.update({ where: { email }, data: { token } })
+    } else {
+        await prisma.emailVerification.create({ data: { email, token } })
+    }
+
+    await mailConfig.sendMail({
+        from: '"Mid B2B" <renatoalmeida727261@gmail.com>',
+        to: email,
+        subject: "Confirmação de email ✔",
+        text: `Olá, tudo bem? Aqui está o código de verificação solicitado para ativar sua conta: ${token}`, // plain text body
+        html: "Olá, tudo bem? Aqui está o código de verificação solicitado para ativar sua conta: <b>" + token + "</b>", // html body
+    });
+}
+
+export const checkEmailVerification = async (email: string, token: string) => {
+    const emailVerification = await prisma.emailVerification.findUnique({ where: { email, token } })
+
+    if (emailVerification) {
+        await prisma.emailVerification.delete({ where: { email } })
+        return true
+    }
+
+    return false
 }

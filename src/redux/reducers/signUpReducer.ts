@@ -13,6 +13,8 @@ const initialState: SignUpState = {
         emailVerified: false,
         accountType: 'buyer'
     },
+    interests: [],
+    interestsSelected: [],
     step: 0
 }
 
@@ -23,6 +25,12 @@ export const signUpReducer = createSlice({
     reducers: {
         setData: (state, action: PayloadAction<SignUpState['data']>) => {
             state.data = action.payload
+        },
+        setInterests: (state, action: PayloadAction<SignUpState['interests']>) => {
+            state.interests = action.payload
+        },
+        setInterestsSelected: (state, action: PayloadAction<SignUpState['interestsSelected']>) => {
+            state.interestsSelected = action.payload
         },
         setStep: (state, action: PayloadAction<SignUpState['step']>) => {
             state.step = action.payload
@@ -53,5 +61,5 @@ export const signUpReducer = createSlice({
     }
 })
 
-export const { setData, setStep, goToStep, goToNextStep, goToPreviousStep } = signUpReducer.actions
+export const { setData, setInterests, setInterestsSelected, setStep, goToStep, goToNextStep, goToPreviousStep } = signUpReducer.actions
 export default signUpReducer.reducer

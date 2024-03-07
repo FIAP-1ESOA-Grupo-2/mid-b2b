@@ -1,3 +1,5 @@
+import { Interest } from "./Interest";
+
 export type UserAccountType = "buyer" | "seller";
 
 export type User = {
@@ -26,6 +28,8 @@ export type SignUpState = {
         emailVerified: boolean;
         accountType: UserAccountType;
     },
+    interests: Interest[],
+    interestsSelected: number[],
     step: number
 }
 

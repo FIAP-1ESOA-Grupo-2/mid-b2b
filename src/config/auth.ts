@@ -1,5 +1,5 @@
 import { checkUser } from "@/server/services/authService"
-import { User, UserSession } from "@/types/Auth"
+import {  UserSession } from "@/types/Auth"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
