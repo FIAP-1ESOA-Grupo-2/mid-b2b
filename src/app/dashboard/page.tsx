@@ -1,6 +1,6 @@
 "use client";
 
-import { createUser } from "@/server/services/authService";
+import { checkUser, createUser } from "@/server/services/authService";
 import { useSession } from "next-auth/react";
 
 
@@ -9,7 +9,7 @@ export default () => {
     const user = useSession()
 
     const handleCreateUser = async () => {
-        console.log(await createUser("Teste", "gS0yT@example.com2", "123456789", "sector", "admin", "123456789", "buyer", "11999999999"))
+        console.log(await checkUser("123456789", "123456789"))
     }
 
     return (
