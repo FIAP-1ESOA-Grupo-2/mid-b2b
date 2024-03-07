@@ -1,3 +1,5 @@
+"use client"
+
 import banner from '@/assets/images/bannerauth.svg'
 import Image from 'next/image'
 

@@ -20,8 +20,8 @@ model User {
   phoneNumber   String?
   email         String         @unique
   password      String         @db.Text
-  sector        String
-  role          String
+  sector        String?
+  role          String?
   accountType   String
   emailVerified Boolean        @default(false)
   createdAt     DateTime       @default(now())
