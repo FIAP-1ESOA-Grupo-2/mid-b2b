@@ -6,8 +6,8 @@ export type User = {
     cpf: string;
     phone_number?: string;
     email: string;
-    sector: string;
-    role: string;
+    sector?: string | null;
+    role?: string | null;
     accountType: UserAccountType;
     createdAt: Date;
 }
