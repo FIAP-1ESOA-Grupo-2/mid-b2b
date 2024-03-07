@@ -13,7 +13,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from 'next13-progressbar';
 import Link from "next/link";
 
-export default () => {
+const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isToggled, setToggled] = useState(true);
 
@@ -130,3 +130,5 @@ export default () => {
         </div>
     )
 }
+
+export default SignIn

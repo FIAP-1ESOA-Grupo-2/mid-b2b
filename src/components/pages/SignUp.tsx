@@ -3,7 +3,7 @@
 import { Banner } from "@/components/Auth/Banner";
 import RegisterSteps from "@/components/Auth/SignUp/TelaCadastro";
 
-export default () => {
+const SignUp = () => {
     return (
         <div className="flex items-center ">
             {/*<div className="">
@@ -15,3 +15,5 @@ export default () => {
         </div>
     )
 }
+
+export default SignUp

@@ -28,7 +28,7 @@ const steps = [
     { title: 'Seus Interesses', description: 'Personalize seus interesses' },
 ]
 
-export default () => {
+const TelaCadastro = () => {
     const [width, setWidth] = useState(0);
 
     const signUp = useAppSelector(state => state.signUp)
@@ -102,3 +102,4 @@ export default () => {
     )
 }
 
+export default TelaCadastro
