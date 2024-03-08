@@ -1,19 +1,23 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { signUpSchema } from "@/lib/validators/userValidator";
-import { goToNextStep, goToStep, setData } from "@/redux/reducers/signUpReducer";
+import { goToNextStep, goToStep, setData, setLoading, setProvider } from "@/redux/reducers/signUpReducer";
+import { hasAccountProvider } from "@/server/services/authProvidersService";
 import { sendEmailVerification } from "@/server/services/authService";
+import { ProfileGoogle } from "@/types/Auth";
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import { useState, ChangeEvent, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash, FaFacebook, FaApple } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
 
 type Inputs = z.infer<typeof signUpSchema>
 
 export const Cadastro = () => {
-    const signUpData = useAppSelector(state => state.signUp.data)
+    const { data: signUpData, provider: signUpProvider } = useAppSelector(state => state.signUp)
+
     const dispatch = useAppDispatch()
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -36,6 +40,63 @@ export const Cadastro = () => {
         } else {
             dispatch(goToStep(3))
         }
+    }
+
+    // Providers Login
+    const handleGoogleLoginSuccess = async (credential: CredentialResponse) => {
+        if (!credential.credential) return;
+
+        const profile: ProfileGoogle = jwtDecode(credential.credential)
+
+        dispatch(setLoading({ title: 'Conectando com o Google...', isLoading: true }))
+        const { data, errorCode } = await hasAccountProvider({ provider_id: profile.sub, provider: 'google' })
+
+        if (errorCode == 'ACCOUNT_NOT_FOUND') {
+            dispatch(setData({
+                ...signUpData,
+                name: profile.name,
+                email: profile.email,
+                emailVerified: profile.email_verified
+            }))
+
+            dispatch(setProvider({
+                provider_id: profile.sub,
+                provider: 'google'
+            }))
+
+            toast({
+                title: 'Conectado com o Google!',
+                description: "Agora preencha seus dados para avançar",
+                status: 'success',
+                position: 'top-right',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
+
+        if (data) {
+            toast({
+                title: 'Faça login!',
+                description: "Já existe uma conta vinculada com a conta do Google",
+                status: 'info',
+                position: 'top-right',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
+
+        dispatch(setLoading({ title: '', isLoading: false }))
+    }
+
+    const handleGoogleLoginError = () => {
+        toast({
+            title: 'Erro ao conectar com o Google',
+            description: "Por favor tente novamente mais tarde",
+            status: 'error',
+            position: 'top-right',
+            duration: 3000,
+            isClosable: true,
+        })
     }
 
     const handleValueChange = (e: ChangeEvent<HTMLInputElement>, key: keyof typeof signUpData) => {
@@ -63,6 +124,20 @@ export const Cadastro = () => {
         dispatch(setData({ ...signUpData, phone_number: formattedInput }))
     };
 
+    const handleCPFChange = () => {
+        let formattedInput = signUpData.cpf
+
+        if (formattedInput.length === 3) {
+            formattedInput = `${formattedInput.slice(0, 3)}.`
+        } else if (formattedInput.length === 7) {
+            formattedInput = `${formattedInput.slice(0, 7)}.`
+        } else if (formattedInput.length === 11) {
+            formattedInput = `${formattedInput.slice(0, 11)}-`
+        }
+
+        dispatch(setData({ ...signUpData, cpf: formattedInput }))
+    }
+
     useEffect(() => {
         if (errors.name || errors.cpf || errors.email || errors.password || errors.sector || errors.role || errors.phone_number) {
             toast({
@@ -79,6 +154,10 @@ export const Cadastro = () => {
     useEffect(() => {
         handlePhoneNumberChange()
     }, [signUpData.phone_number])
+
+    useEffect(() => {
+        handleCPFChange()
+    }, [signUpData.cpf])
 
     return (
         <section className="mt-6  max-h-screen max-w-screen-md mx-auto">
@@ -102,6 +181,7 @@ export const Cadastro = () => {
                     <input
                         placeholder="CPF *"
                         {...register("cpf", { value: signUpData.cpf, onChange: e => handleValueChange(e, 'cpf') })}
+                        value={signUpData.cpf}
                         type="text"
                         className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.cpf ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
                     />
@@ -121,7 +201,7 @@ export const Cadastro = () => {
                     <input
                         placeholder="Número de telefone"
                         {...register("phone_number", { value: signUpData.phone_number, onChange: e => handleValueChange(e, 'phone_number') })}
-                        type="text"
+                        value={signUpData.phone_number}
                         className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.phone_number ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
                     />
                     <small className="ml-2 text-red-600 font-semibold0">{errors.phone_number?.message}</small>
@@ -167,14 +247,28 @@ export const Cadastro = () => {
 
                 <button type="submit" className="bg-mainblue text-formbg py-3 text-base rounded-lg shadow-xl hover:bg-mainbluehover duration-100 ease-in-out">Avançar</button>
             </form>
-            <p className="text-center text-forminput my-5 text-base">ou continue com</p>
-            <nav>
-                <ul className="flex items-center justify-center gap-5 cursor-pointer">
-                    <li><a href="#"><FaFacebook size={40} color={"#0163E0"} /></a></li>
-                    <li><a href="#"></a><FaApple size={40} /></li>
-                    <li><a href="#"><FcGoogle size={40} /></a></li>
-                </ul>
-            </nav>
+
+            {!signUpProvider.provider &&
+                <>
+                    <p className="text-center text-forminput my-5 text-base">ou continue com</p>
+                    <div>
+                        <ul className="flex items-center justify-center gap-5 cursor-pointer">
+                            <li>
+                                <GoogleLogin
+                                    onSuccess={handleGoogleLoginSuccess}
+                                    onError={handleGoogleLoginError}
+                                    text="signup_with"
+                                    context="signup"
+                                    shape="circle"
+                                    type="icon"
+                                />
+                            </li>
+                            <li><a href="#"><FaFacebook size={36} color={"#0163E0"} /></a></li>
+                            <li><a href="#"></a><FaApple size={37} /></li>
+                        </ul>
+                    </div>
+                </>
+            }
         </section>
     )
 }

@@ -24,3 +24,13 @@ export const hasAccountProvider = async ({ provider_id, provider }: { provider_i
 
     return { data: user }
 }
+
+export const createAccountProvider = async ({ user_id, provider_id, provider }: { user_id: number, provider_id: string, provider: UserProviders }) => {
+    if (await prisma.userProvider.findFirst({ where: { provider_id, provider } })) {
+        return { error: 'Conta ja conectada com este provedor', errorCode: 'ACCOUNT_ALREADY_EXISTS' }
+    }
+
+    const newUserProvider = await prisma.userProvider.create({ data: { userId: user_id, provider_id, provider } })
+
+    return { data: newUserProvider }
+}
