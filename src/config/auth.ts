@@ -1,5 +1,5 @@
 import { checkUser } from "@/server/services/authService"
-import {  UserSession } from "@/types/Auth"
+import { UserSession } from "@/types/Auth"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
@@ -20,17 +20,15 @@ export const authConfig = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user, account, profile, }) {
+        async jwt({ token, user }) {
             if (user) token.user = user
 
             return token
         },
-        async session({ session, token, user }) {
+        async session({ session, token }) {
             if (token.user) session.user = token.user as UserSession
 
             return session
         }
-
-
     }
 } satisfies NextAuthOptions

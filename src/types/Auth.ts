@@ -2,6 +2,8 @@ import { Interest } from "./Interest";
 
 export type UserAccountType = "buyer" | "seller";
 
+export type UserProviders = 'google'
+
 export type User = {
     id: number;
     name: string;

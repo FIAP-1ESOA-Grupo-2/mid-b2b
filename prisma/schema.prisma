@@ -30,8 +30,19 @@ model User {
   emailVerified Boolean        @default(false)
   createdAt     DateTime       @default(now())
   interests     UserInterest[]
+  UserProvider  UserProvider[]
 
   @@map("users")
+}
+
+model UserProvider {
+  id          Int     @id @default(autoincrement())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  provider_id String?
+  provider    String
+
+  @@map("users_providers")
 }
 
 model Interest {
