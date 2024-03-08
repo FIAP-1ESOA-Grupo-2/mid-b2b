@@ -15,8 +15,12 @@ import { Label } from "@/components/ui/label"
 import { Spinner, useToast } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { Interest } from "@/types/Interest";
-import { createInterest, getInterests } from "@/server/services/interestService";
-import { setInterests, setInterestsSelected } from "@/redux/reducers/signUpReducer";
+import { createInterest, getInterests, setUserInterests } from "@/server/services/interestService";
+import { goToStep, resetSignUp, setData, setInterests, setInterestsSelected, setLoading } from "@/redux/reducers/signUpReducer";
+import { createUser } from "@/server/services/authService";
+import { createAccountProvider } from "@/server/services/authProvidersService";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next13-progressbar";
 
 export const Interesses = () => {
     const signUp = useAppSelector(state => state.signUp)
@@ -29,6 +33,7 @@ export const Interesses = () => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const toast = useToast()
+    const router = useRouter()
 
     const handleGetInterests = async () => {
         setInterestsLoaded(false)
@@ -52,6 +57,59 @@ export const Interesses = () => {
 
         setInterestsFiltered(interestsFiltered)
     }
+
+
+    const handleCreateAccount = async () => {
+        const { data, interestsSelected, provider, step } = signUp
+
+        if (step == 3 && interestsSelected.length >= 3) {
+            dispatch(setLoading({ title: 'Por favor aguarde, estamos criando sua conta...', isLoading: true }))
+
+            const newUser = await createUser(data.name, data.email, data.cpf, data.sector, data.role, data.password, data.accountType, data.phone_number)
+            if (newUser.error || !newUser.data) {
+                toast({
+                    title: 'Erro ao criar conta',
+                    description: newUser.error,
+                    status: 'error',
+                    position: 'top-right',
+                    duration: 3000,
+                    isClosable: true
+                })
+
+                if (newUser.errorCode == 'EMAIL_ALREADY_IN_USE') {
+                    dispatch(setData({ ...data, emailVerified: false, email: '' }))
+                }
+
+                dispatch(goToStep(1))
+                dispatch(setLoading({ title: '', isLoading: false }))
+
+                return;
+            }
+
+            if (provider.provider) {
+                await createAccountProvider({ user_id: newUser.data.id, provider_id: provider.provider_id, provider: provider.provider })
+            }
+
+            await setUserInterests(newUser.data.id, signUp.interestsSelected)
+            await signIn("credentials", { email_or_cpf: data.email, password: data.password, redirect: false })
+
+
+            toast({
+                title: 'Conta criada com sucesso!',
+                description: 'Agora você pode iniciar a jornada de negócios',
+                status: 'success',
+                position: 'top-right',
+                duration: 2000,
+                isClosable: true
+            })
+
+            dispatch(setLoading({ title: '', isLoading: false }))
+            dispatch(resetSignUp())
+
+            router.push('/dashboard')
+        }
+    }
+
 
     const handleAdd = async () => {
         if (!newTodo) {
@@ -189,7 +247,7 @@ export const Interesses = () => {
                 }
 
                 {interestsLoaded &&
-                    <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 ">
+                    <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 mb-10">
                         {interestsFiltered.map((item) => (
                             <li
                                 key={item.id}
@@ -203,6 +261,15 @@ export const Interesses = () => {
                     </ul>
                 }
             </div>
+
+            <div className={`${signUp.step == 3 && signUp.interestsSelected.length >= 3 ? 'bottom-3 md:bottom-10' : '-bottom-20'} fixed mx-4 md:w-[750px] left-0 right-0 md:mx-auto duration-500 `}>
+                <button
+                    onClick={signUp.step == 3 && signUp.interestsSelected.length >= 3 ? handleCreateAccount : () => null}
+                    className="bg-emerald-600  text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500  hover:scale-110 duration-300 ease-in-out w-full"
+                >Criar conta</button>
+            </div>
         </section>
+
+
     )
 }

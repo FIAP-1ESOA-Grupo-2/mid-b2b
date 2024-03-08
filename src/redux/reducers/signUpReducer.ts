@@ -15,7 +15,15 @@ const initialState: SignUpState = {
     },
     interests: [],
     interestsSelected: [],
-    step: 0
+    step: 0,
+    loading: {
+        title: '',
+        isLoading: false
+    },
+    provider: {
+        provider_id: '',
+        provider: ''
+    }
 }
 
 
@@ -35,11 +43,17 @@ export const signUpReducer = createSlice({
         setStep: (state, action: PayloadAction<SignUpState['step']>) => {
             state.step = action.payload
         },
+        setLoading: (state, action: PayloadAction<SignUpState['loading']>) => {
+            state.loading = action.payload
+        },
+        setProvider: (state, action: PayloadAction<SignUpState['provider']>) => {
+            state.provider = action.payload
+        },
         goToStep: (state, action: PayloadAction<SignUpState['step']>) => {
             if (
                 (action.payload >= 0 && action.payload <= 1 && state.data.accountType) ||
                 (action.payload >= 1 && action.payload <= 2 && state.data.name && state.data.cpf && state.data.email && state.data.password) ||
-                (action.payload >= 2 && action.payload <= 3 && state.data.emailVerified)
+                (action.payload >= 2 && action.payload <= 3 && state.data.emailVerified && state.data.name && state.data.cpf && state.data.email && state.data.password)
             ) {
                 state.step = action.payload
             }
@@ -64,5 +78,16 @@ export const signUpReducer = createSlice({
     }
 })
 
-export const { setData, setInterests, setInterestsSelected, setStep, goToStep, goToNextStep, goToPreviousStep, resetSignUp } = signUpReducer.actions
+export const {
+    setData,
+    setInterests,
+    setInterestsSelected,
+    setLoading,
+    setProvider,
+    setStep,
+    goToStep,
+    goToNextStep,
+    goToPreviousStep,
+    resetSignUp
+} = signUpReducer.actions
 export default signUpReducer.reducer

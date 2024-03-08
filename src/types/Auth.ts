@@ -32,6 +32,23 @@ export type SignUpState = {
     },
     interests: Interest[],
     interestsSelected: number[],
-    step: number
+    step: number,
+    loading: {
+        title: string,
+        isLoading: boolean
+    },
+    provider: {
+        provider_id: string,
+        provider: UserProviders | ''
+    }
 }
 
+export type ProfileGoogle = {
+    sub: string;
+    name: string;
+    given_name: string;
+    family_name: string;
+    picture: string;
+    email: string;
+    email_verified: boolean;
+}
