@@ -16,20 +16,23 @@ export const createUser = async (
     password: string,
     accountType: "buyer" | "seller",
     phoneNumber?: string,
-): Promise<{ error?: string }> => {
+) => {
     if (await prisma.user.findUnique({ where: { email } })) {
-        return {
-            error: 'Email já está sendo usado.'
-        }
+        return { error: 'Email já está sendo usado.', errorCode: 'EMAIL_ALREADY_IN_USE' }
+    };
+
+    if (await prisma.user.findUnique({ where: { cpf } })) {
+        return { error: 'CPF já está sendo usado.', errorCode: 'CPF_ALREADY_IN_USE' }
     };
 
     let hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
-        data: { name, email, cpf, sector, role, accountType, password: hashedPassword, phoneNumber }
+    const newUser = await prisma.user.create({
+        data: { name, email, cpf, sector, role, accountType, password: hashedPassword, phoneNumber },
+        select: { id: true }
     })
 
-    return { error: '' }
+    return { data: newUser }
 }
 
 export const checkUser = async (email_or_cpf: string, password: string): Promise<User | null> => {

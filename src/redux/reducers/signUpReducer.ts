@@ -57,9 +57,12 @@ export const signUpReducer = createSlice({
             if (state.step > 0) {
                 state.step -= 1
             }
+        },
+        resetSignUp: (state) => {
+            state = initialState
         }
     }
 })
 
-export const { setData, setInterests, setInterestsSelected, setStep, goToStep, goToNextStep, goToPreviousStep } = signUpReducer.actions
+export const { setData, setInterests, setInterestsSelected, setStep, goToStep, goToNextStep, goToPreviousStep, resetSignUp } = signUpReducer.actions
 export default signUpReducer.reducer
