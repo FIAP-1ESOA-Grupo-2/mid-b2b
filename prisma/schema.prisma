@@ -9,8 +9,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" // sqlite | mysql
-  url      = "file:dev.db" // file:dev.db | env("DATABASE_URL")
+    provider = "sqlite" // sqlite | mysql
+  url      = "file:./dev.db" // file:./dev.db | env("DATABASE_URL")
 }
 
 model User {
