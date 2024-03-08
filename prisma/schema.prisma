@@ -9,29 +9,40 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  //provider  = "postgresql"
+  // url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 
-  //provider = "sqlite" // sqlite | mysql
-  //url      = "file:./dev.db" // file:./dev.db | env("DATABASE_URL")
+  provider = "mysql" // sqlite | mysql
+  url      = env("DATABASE_URL") // file:./dev.db | env("DATABASE_URL")
 }
 
 model User {
   id            Int            @id @default(autoincrement())
   name          String
-  cpf           String
+  cpf           String         @unique
   phoneNumber   String?
   email         String         @unique
-  password      String //@db.Text
+  password      String         @db.Text
   sector        String?
   role          String?
   accountType   String
   emailVerified Boolean        @default(false)
   createdAt     DateTime       @default(now())
   interests     UserInterest[]
+  UserProvider  UserProvider[]
 
   @@map("users")
+}
+
+model UserProvider {
+  id          Int     @id @default(autoincrement())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  provider_id String?
+  provider    String
+
+  @@map("users_providers")
 }
 
 model Interest {

@@ -7,6 +7,7 @@ import { TipoConta } from "./TipoConta"
 import {
     Box,
     Progress,
+    Spinner,
     Step,
     StepDescription,
     StepIcon,
@@ -20,10 +21,10 @@ import {
     useToast,
 } from '@chakra-ui/react'
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp"
-import { goToStep } from "@/redux/reducers/signUpReducer"
+import { goToStep, resetSignUp, setData } from "@/redux/reducers/signUpReducer"
 import { EmailConfirm } from "./EmailConfirm"
 import { createUser } from "@/server/services/authService"
-import { signIn, useSession } from "next-auth/react"
+import { signIn } from "next-auth/react"
 import { useRouter } from "next13-progressbar"
 import { setUserInterests } from "@/server/services/interestService"
 
@@ -43,7 +44,6 @@ const TelaCadastro = () => {
 
     const toast = useToast()
     const router = useRouter()
-    const userSession = useSession()
 
     const { activeStep, setActiveStep } = useSteps({
         index: 0,
@@ -55,14 +55,31 @@ const TelaCadastro = () => {
     const handleCreateAccount = async () => {
         const { data, interestsSelected } = signUp
 
-        if (activeStep == 3 && interestsSelected.length >= 3 && userSession.data?.user) {
+        if (activeStep == 3 && interestsSelected.length >= 3) {
             setLoading(true)
 
-            await createUser(data.name, data.email, data.cpf, data.sector, data.role, data.password, data.accountType, data.phone_number)
-            await setUserInterests(userSession.data?.user.id, signUp.interestsSelected)
-            await signIn("credentials", { email: data.email, password: data.password, redirect: false })
+            const newUser = await createUser(data.name, data.email, data.cpf, data.sector, data.role, data.password, data.accountType, data.phone_number)
+            if (newUser.error || !newUser.data) {
+                toast({
+                    title: 'Erro ao criar conta',
+                    description: newUser.error,
+                    status: 'error',
+                    position: 'top-right',
+                    duration: 3000,
+                    isClosable: true
+                })
 
-            setLoading(false)
+                if (newUser.errorCode == 'EMAIL_ALREADY_IN_USE') {
+                    dispatch(setData({ ...data, emailVerified: false, email: '' }))
+                }
+
+                dispatch(goToStep(1))
+                setLoading(false)
+                return;
+            }
+
+            await setUserInterests(newUser.data.id, signUp.interestsSelected)
+            await signIn("credentials", { email_or_cpf: data.email, password: data.password, redirect: false })
 
             toast({
                 title: 'Conta criada com sucesso!',
@@ -72,6 +89,9 @@ const TelaCadastro = () => {
                 duration: 2000,
                 isClosable: true
             })
+
+            setLoading(false)
+            dispatch(resetSignUp())
 
             router.push('/dashboard')
         }
@@ -126,20 +146,27 @@ const TelaCadastro = () => {
             }
 
             <div className="overflow-auto flex-1">
-                {activeStep == 0 &&
+                {!loading && activeStep == 0 &&
                     <TipoConta />
                 }
 
-                {activeStep == 1 &&
+                {!loading && activeStep == 1 &&
                     <Cadastro />
                 }
 
-                {activeStep == 2 &&
+                {!loading && activeStep == 2 &&
                     <EmailConfirm />
                 }
 
-                {activeStep == 3 &&
+                {!loading && activeStep == 3 &&
                     <Interesses />
+                }
+
+                {loading &&
+                    <div className="h-full flex justify-center items-center flex-col gap-6">
+                        <Spinner thickness='4px' color='blue.500' size='xl' />
+                        <p className="text-sm font-bold text-slate-600">Por favor aguarde, estamos criando sua conta...</p>
+                    </div>
                 }
             </div>
         </div >
