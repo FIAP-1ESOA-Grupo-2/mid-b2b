@@ -1,10 +1,7 @@
 'use client';
 
-import { Banner } from "@/components/Auth/Banner"
 import { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash, FaFacebook, FaApple } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { useForm, SubmitHandler } from "react-hook-form"
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema } from "@/lib/validators/userValidator";
 import { useToast } from "@chakra-ui/react";
@@ -12,6 +9,11 @@ import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next13-progressbar';
 import Link from "next/link";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { ProfileGoogle } from "@/types/Auth";
+import { hasAccountProvider } from "@/server/services/authProvidersService";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +46,63 @@ const SignIn = () => {
         })
     }
 
+    const handleGoogleLoginSuccess = async (credential: CredentialResponse) => {
+        if (!credential.credential) return;
+
+        const profile: ProfileGoogle = jwtDecode(credential.credential)
+
+        toast({
+            title: 'Autenticando...!',
+            description: "Por favor aguarde!",
+            status: 'loading',
+            id: 'google-signin-loading',
+            position: 'top-right',
+            duration: 3000,
+            isClosable: true
+        })
+
+        const { data, errorCode } = await hasAccountProvider({ provider_id: profile.sub, provider: 'google' })
+
+        if (errorCode == 'ACCOUNT_NOT_FOUND') {
+            toast({
+                title: 'Crie uma conta!',
+                description: "Esse e-mail ainda não possui uma conta",
+                status: 'info',
+                position: 'top-right',
+                duration: 3000,
+                isClosable: true
+            })
+        }
+
+        if (data) {
+            await signIn('credentials', { user: JSON.stringify(data), redirect: false })
+
+            toast({
+                title: 'Autenticado com sucesso!',
+                description: "Seja bem-vindo(a)",
+                status: 'success',
+                position: 'top-right',
+                duration: 3000,
+                isClosable: true
+            })
+
+            router.push('/dashboard')
+        }
+
+        toast.close('google-signin-loading')
+    }
+
+    const handleGoogleLoginError = () => {
+        toast({
+            title: 'Erro ao conectar com o Google',
+            description: "Por favor tente novamente mais tarde",
+            status: 'error',
+            position: 'top-right',
+            duration: 3000,
+            isClosable: true,
+        })
+    }
+
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
     };
@@ -66,38 +125,35 @@ const SignIn = () => {
     }, [errors])
 
     return (
-        <div className='h-screen sm:flex flex-col items-center justify-center md:flex lg:grid grid-cols-2 w-screen overflow-hidden'>
-            <div className="col-span-1 max-w-full">
-                <Banner />
-            </div>
-            <div className="h-screen flex flex-col items-center justify-center col-span-1 mx-10 my-auto sm:w-screen sm:mx-10 md:w-full sm:px-10 lg:m-auto ">
+        <div className='max-w-screen-md mx-auto h-screen -mb-1'>
+            <div className="flex flex-col items-center justify-center h-full mx-8">
                 <h1 className="text-3xl font-bold">Faça seu Login</h1>
                 <p className='mt-1 mb-6 max-w-lg text-center text-slate-700 text-sm'>
                     Faça seu login para acessar sua conta, ou <Link href="/auth/signup" className="text-mainblue hover:text-mainbluehover hover:underline font-semibold">crie uma conta</Link>
                 </p>
                 <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-6 ">
+                    <div className="mb-6">
                         <input
                             {...register("email_or_cpf")}
                             id="email"
                             placeholder="E-mail ou CPF"
-                            className={`w-full text-lg rounded-lg bg-formbg px-4 py-4 outline-none  border ${errors.email_or_cpf ? "border-red-500" : "border-slate-200"} transition-all`}
+                            className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.email_or_cpf ? "border-red-500" : "border-slate-100 focus:border-mainblue"}  transition-all`}
                         />
                         <small className="ml-2 text-red-600 font-semibold">{errors.email_or_cpf?.message}</small>
                     </div>
 
-                    <div className="mb-6 ">
-                        <div className={`flex items-center bg-formbg px-4 py-4 w-full rounded-lg border transition-all ${errors.password ? "border-red-500" : "border-slate-200 "}`}>
+                    <div className="mb-2">
+                        <div className="flex bg-formbg rounded-lg">
                             <input
                                 {...register("password")}
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 placeholder="Senha"
-                                className="w-full text-lg  bg-transparent outline-none mr-2 "
+                                className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.password ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
                             />
                             <button
                                 type="button"
-                                className="toggle-password"
+                                className="toggle-password mx-6"
                                 onClick={handleTogglePassword}
                             >
                                 {showPassword ? <FaEye className="text-mainblue" /> : <FaEyeSlash className="text-mainblue" />}
@@ -107,23 +163,25 @@ const SignIn = () => {
                         <small className="ml-2 text-red-600 font-semibold">{errors.password?.message}</small>
                     </div>
 
-                    <div className="flex flex-col md:flex-row text-xs text-textgrey justify-between mb-8">
-                        <div className="fflex items-center gap-2 mb-4">
-                            <input type="checkbox" id="remember" checked={isToggled} onChange={handleToggle} className="mr-2" />
-                            <label htmlFor="remember" className="text-xl">Lembrar senha</label>
-                        </div>
-                        <a href="#" className="text-xl">Esqueceu sua senha?</a>
+                    <div className="flex text-textgrey justify-end mb-8">
+                        <Link href="#" className="text-base hover:text-cyan-500">Esqueceu sua senha?</Link>
                     </div>
-                    <button type="submit" className="w-full text-xl bg-mainblue rounded-lg text-white px-6 py-4 hover:bg-mainbluehover ease-in-out duration-100">
+                    <button type="submit" className="bg-mainblue text-formbg py-3 text-base rounded-lg shadow-xl hover:bg-mainbluehover duration-100 ease-in-out w-full">
                         Login
                     </button>
                 </form>
                 <p className="font-base text-textgrey my-8 text-base">ou continue com</p>
                 <div>
                     <ul className="flex gap-3">
-                        <li className="cursor-pointer"><FaApple size={40} /></li>
-                        <li className="cursor-pointer"><FaFacebook className="text-[#0163E0]" size={40} /></li>
-                        <li className="cursor-pointer"><FcGoogle size={40} /></li>
+                        <li>
+                            <GoogleLogin
+                                onSuccess={handleGoogleLoginSuccess}
+                                onError={handleGoogleLoginError}
+                                text="signin_with"
+                                context="signin"
+                                useOneTap
+                            />
+                        </li>
                     </ul>
                 </div>
             </div>
