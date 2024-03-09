@@ -18,12 +18,10 @@ import {
     StepTitle,
     Stepper,
     useSteps,
-    useToast,
 } from '@chakra-ui/react'
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp"
 import { goToStep } from "@/redux/reducers/signUpReducer"
 import { EmailConfirm } from "./EmailConfirm"
-import { useRouter } from "next13-progressbar"
 
 const steps = [
     { title: 'Tipo de Conta', description: 'Escolha o tipo de conta' },
@@ -36,10 +34,7 @@ const TelaCadastro = () => {
     const [width, setWidth] = useState(0);
 
     const signUp = useAppSelector(state => state.signUp)
-    const dispatch = useAppDispatch()
-
-    const toast = useToast()
-    const router = useRouter()
+    const dispatch = useAppDispatch() 
 
     const { activeStep, setActiveStep } = useSteps({
         index: 0,
@@ -48,7 +43,10 @@ const TelaCadastro = () => {
 
     const handleStepOnClick = (index: number) => dispatch(goToStep(index))
 
-    useEffect(() => {
+    useEffect(() => { 
+        // Set width initially
+        setWidth(window.innerWidth)
+        
         const updateDimensions = () => setWidth(window.innerWidth)
 
         window.addEventListener("resize", updateDimensions);
