@@ -94,3 +94,66 @@ export const checkEmailVerification = async (email: string, token: string) => {
 
     return false
 }
+
+export const sendEmailForgotPassword = async (email_or_cpf: string) => {
+    const user = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { email: email_or_cpf },
+                { cpf: email_or_cpf }
+            ]
+        },
+        select: { email: true }
+    })
+
+    if (!user) return
+
+    const token = `${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`
+
+    if (await prisma.passwordReset.findUnique({ where: { email: user.email } })) {
+        await prisma.passwordReset.update({ where: { email: user.email }, data: { token } })
+    } else {
+        await prisma.passwordReset.create({ data: { email: user.email, token } })
+    }
+
+    await mailConfig.sendMail({
+        from: '"Mid B2B" <renatoalmeida727261@gmail.com>',
+        to: user.email,
+        subject: "Redefinir senha ✔",
+        text: `Olá, tudo bem? Aqui está o código de redefinição de senha solicitado: ${token}`, // plain text body
+        html: "Olá, tudo bem? Aqui está o código de redefinição de senha solicitado: <b>" + token + "</b>", // html body
+    });
+
+    return { data: user }
+}
+
+export const checkPasswordReset = async (email: string, token: string) => {
+    const passwordReset = await prisma.passwordReset.findUnique({ where: { email, token } })
+
+    if (passwordReset) {
+        await prisma.passwordReset.delete({ where: { email } })
+        return true
+    }
+
+    return false
+}
+
+export const updatePassword = async (email: string, password: string) => {
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const user = await prisma.user.update({ where: { email }, data: { password: hashedPassword } })
+
+    return {
+        data: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            cpf: user.cpf,
+            phone_number: user.phoneNumber,
+            sector: user.sector,
+            role: user.role,
+            accountType: user.accountType as UserAccountType,
+            createdAt: user.createdAt
+        }
+    }
+}

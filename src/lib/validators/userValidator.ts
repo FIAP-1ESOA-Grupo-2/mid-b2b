@@ -37,3 +37,11 @@ export const signInSchema = z.object({
         .string()
         .min(1, 'A senha é obrigatória')
 })
+
+
+export const forgotPasswordSchema = z.object({
+    email_or_cpf: z.union([
+        z.string().regex(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/, 'Email ou CPF é obrigatório'),
+        z.string().email('Email inválido')
+    ]),
+})

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import imageMobile from '@/assets/images/confirmemail.svg'
 import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
 import { goToNextStep, setData } from '@/redux/reducers/signUpReducer';
-import { HStack, PinInput, PinInputField, useToast } from '@chakra-ui/react'
+import { PinInput, PinInputField, useToast } from '@chakra-ui/react'
 import { checkEmailVerification, sendEmailVerification } from '@/server/services/authService';
 
 export const EmailConfirm = () => {
