@@ -164,7 +164,7 @@ const SignIn = () => {
                     </div>
 
                     <div className="flex text-textgrey justify-end mb-8">
-                        <Link href="#" className="text-base hover:text-cyan-500">Esqueceu sua senha?</Link>
+                        <Link href="/auth/forgot-password" className="text-base hover:text-cyan-500">Esqueceu sua senha?</Link>
                     </div>
                     <button type="submit" className="bg-mainblue text-formbg py-3 text-base rounded-lg shadow-xl hover:bg-mainbluehover duration-100 ease-in-out w-full">
                         Login
