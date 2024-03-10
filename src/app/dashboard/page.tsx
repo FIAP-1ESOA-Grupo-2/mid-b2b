@@ -1,26 +1,11 @@
-import { authConfig } from "@/config/auth";
-import { checkUser, createUser } from "@/server/services/authService";
-import { getServerSession } from "next-auth";
-import { GoogleLogin } from '@react-oauth/google';
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import Dashboard from "@/components/pages/Dashboard/Dashboard";
 
 
-const DashboardPage = async () => {
-    const user = await getServerSession(authConfig)
-
+const DashboardPage = () => {
     return (
-        <>
-            STATUS: <mark>{user?.user ? "Conectado" : "Desconectado"}</mark>
-            <br />
-            <br />
-            <hr />
-            <pre>{JSON.stringify(user?.user)}</pre>
-            <br />
-            <br />
-            <hr />
-
-        </>
+        <main>
+            <Dashboard />
+        </main>
 
     )
 }
