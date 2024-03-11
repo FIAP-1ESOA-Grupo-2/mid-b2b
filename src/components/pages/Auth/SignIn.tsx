@@ -65,11 +65,11 @@ const SignIn = () => {
 
         if (errorCode == 'ACCOUNT_NOT_FOUND') {
             toast({
-                title: 'Crie uma conta!',
-                description: "Esse e-mail ainda não possui uma conta",
+                title: 'E-mail ainda não vinculado!',
+                description: "Faça login e depois associe sua conta com o Google",
                 status: 'info',
                 position: 'top-right',
-                duration: 3000,
+                duration: 4000,
                 isClosable: true
             })
         }

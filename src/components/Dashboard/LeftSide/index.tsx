@@ -20,8 +20,13 @@ import { MdSettings } from "react-icons/md";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FaPowerOff } from "react-icons/fa6";
+import { User } from "@/types/Auth";
 
-export const DashboardLeftSide = () => {
+type Props = {
+    user: User
+}
+
+export const DashboardLeftSide = ({ user }: Props) => {
     const auth = useSession()
     const pathname = usePathname()
     const toast = useToast()
@@ -35,7 +40,7 @@ export const DashboardLeftSide = () => {
             position: 'top-right'
         })
 
-        signOut()
+        signOut({ callbackUrl: '/' })
     }
 
     return (
@@ -49,16 +54,16 @@ export const DashboardLeftSide = () => {
                 </SkeletonCircle>
 
                 <div className="flex-1">
-                    <Skeleton isLoaded={auth.status == 'authenticated'} className="w-full flex items-center gap-2 justify-between" height={10}>
+                    <div className="w-full flex items-center gap-2 justify-between" >
                         <div>
-                            <span className="text-lg font-bold text-slate-700 truncate max-w-48 block">{auth.data?.user.name}</span>
-                            <span className="text-xs text-slate-500 font-semigbold -mt-1 truncate max-w-48 block">{auth.data?.user.email}</span>
+                            <span className="text-lg font-bold text-slate-700 truncate max-w-48 block">{user.name}</span>
+                            <span className="text-xs text-slate-500 font-semigbold -mt-1 truncate max-w-48 block">{user.email}</span>
                         </div>
 
                         <div>
                             <MdOutlineOpenInNew className="text-slate-500" size={20} />
                         </div>
-                    </Skeleton>
+                    </div>
                 </div>
             </Link>
 
