@@ -1,26 +1,28 @@
-import { authConfig } from "@/config/auth";
-import { checkUser, createUser } from "@/server/services/authService";
-import { getServerSession } from "next-auth";
-import { GoogleLogin } from '@react-oauth/google';
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { DashboardHeader } from "@/components/Dashboard/Header";
+import { DashboardLeftSide } from "@/components/Dashboard/LeftSide";
+import { Metadata } from "next";
 
+export const metadata = {
+    title: 'Dashboard',
+} satisfies Metadata
 
-const DashboardPage = async () => {
-    const user = await getServerSession(authConfig)
-
+const DashboardPage = () => {
     return (
-        <>
-            STATUS: <mark>{user?.user ? "Conectado" : "Desconectado"}</mark>
-            <br />
-            <br />
-            <hr />
-            <pre>{JSON.stringify(user?.user)}</pre>
-            <br />
-            <br />
-            <hr />
+        <main className="flex flex-col overflow-hidden h-screen bg-[#F2F3F5]">
+            <div className="hidden sm:block">
+                <DashboardHeader mode="desktop" />
+            </div>
 
-        </>
+            <div className="flex-1 mx-auto max-w-screen-xl overflow-auto w-full px-4 xl:px-0">
+                <div className="hidden sm:block">
+                    <DashboardLeftSide />
+                </div>
+            </div>
+
+            <div className="block sm:hidden">
+                <DashboardHeader mode="mobile" />
+            </div>
+        </main>
 
     )
 }
