@@ -10,8 +10,8 @@ import Icon3 from '@/assets/images/dashboard-leftside-icon-3.svg';
 import Icon4 from '@/assets/images/dashboard-leftside-icon-4.svg';
 import { MdHome } from "react-icons/md";
 import { MdOutlineHome } from "react-icons/md";
-import { MdLogout } from "react-icons/md";
 import { MdOutlineBusinessCenter } from "react-icons/md";
+import { MdOutlineNotificationsNone } from "react-icons/md";
 import { BiUser } from "react-icons/bi";
 import { BiSolidUser } from "react-icons/bi";
 import { MdBusinessCenter } from "react-icons/md";
@@ -21,6 +21,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FaPowerOff } from "react-icons/fa6";
 import { User } from "@/types/Auth";
+import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 
 type Props = {
     user: User
@@ -30,31 +31,42 @@ export const DashboardLeftSide = ({ user }: Props) => {
     const pathname = usePathname()
     const toast = useToast()
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         toast({
             title: 'Saindo...',
             description: 'Por favor aguarde',
             status: 'loading',
             duration: 10 * 1000,
+            id: 'signout-loading',
             position: 'top-right'
         })
 
-        signOut({ callbackUrl: '/' })
+        await signOut()
+
+        toast.close('signout-loading')
+        toast({
+            title: 'Você foi deslogado...',
+            description: 'Volte sempre!',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+            position: 'top-right'
+        })
     }
 
     return (
-        <div className="flex flex-col gap-4 mt-8">
+        <div className="flex flex-col gap-4 mb-14 w-72">
             <Link
                 href="/dashboard/profile"
-                className="flex gap-3 px-7 py-5 bg-white rounded-xl w-80 items-start border shadow-sm border-slate-200 cursor-pointer select-none transition-all hover:bg-slate-50"
+                className="flex gap-3 p-5 bg-white rounded-xl items-start border shadow-sm border-slate-200 cursor-pointer select-none transition-all hover:bg-slate-50"
             >
                 <Avatar name={user.name} />
 
                 <div className="flex-1">
-                    <div className="w-full flex items-center gap-2 justify-between" >
+                    <div className="w-full flex items-center gap-2 justify-between">
                         <div>
-                            <span className="text-lg font-bold text-slate-700 truncate max-w-48 block">{user.name}</span>
-                            <span className="text-xs text-slate-500 font-semigbold -mt-1 truncate max-w-48 block">{user.email}</span>
+                            <span className="text-lg font-bold text-slate-700 truncate max-w-40 block">{user.name}</span>
+                            <span className="text-xs text-slate-500 font-semigbold -mt-1 truncate max-w-40 block">{user.email}</span>
                         </div>
 
                         <div>
@@ -64,7 +76,7 @@ export const DashboardLeftSide = ({ user }: Props) => {
                 </div>
             </Link>
 
-            <div className="flex flex-col gap-3 px-7 py-5 bg-white rounded-xl w-80 border shadow-sm border-slate-200">
+            <div className="flex flex-col gap-3 px-6 py-5 bg-white rounded-xl border shadow-sm border-slate-200">
                 <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
                     <Image src={Icon1} alt="icon" />
                     <span className="font-semibold text-sm text-inherit ">Encontre o melhor negócio</span>
@@ -83,12 +95,12 @@ export const DashboardLeftSide = ({ user }: Props) => {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-3 px-7 py-5 bg-white rounded-xl w-80 border shadow-sm border-slate-200">
+            <div className="flex flex-col gap-3 px-6 py-5 bg-white rounded-xl border shadow-sm border-slate-200">
                 <Link
                     href={'/dashboard'}
                     className={`flex gap-2 items-center cursor-pointer p-1 transition-all hover:text-mainblue ${pathname == '/dashboard' ? 'text-mainblue' : 'text-zinc-500'}`}
                 >
-                    {pathname == '/dashboard' ? <MdHome className="text-mainblue" size={29} /> : <MdOutlineHome className="text-zinc-500" size={29} />}
+                    {pathname == '/dashboard' ? <MdHome className="text-mainblue" size={29} /> : <MdOutlineHome size={29} />}
                     <span className="font-semibold text-sm text-inherit mt-0.5">Início</span>
                 </Link>
                 <Link
@@ -120,6 +132,6 @@ export const DashboardLeftSide = ({ user }: Props) => {
                     <span className="font-semibold text-sm text-inherit mt-0.5 ml-1">Sair</span>
                 </button>
             </div>
-        </div >
+        </div>
     )
 }
