@@ -9,44 +9,62 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" // sqlite | mysql
-  url      = "file:./dev.db" // file://dev.db | env("DATABASE_URL")
+  //provider  = "postgresql"
+  //url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  //directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+
+  provider = "mysql" // sqlite | mysql
+  url      = env("DATABASE_URL") // file:./dev.db | env("DATABASE_URL")
+
+  //provider = "sqlite"
+  //url      = "file:./dev.db"
 }
 
 model User {
   id            Int            @id @default(autoincrement())
   name          String
-  cpf           String
+  cpf           String         @unique
   phoneNumber   String?
   email         String         @unique
-  password      String //@db.Text (MYSQL)
+  password      String         @db.Text
   sector        String?
   role          String?
   accountType   String
   emailVerified Boolean        @default(false)
   createdAt     DateTime       @default(now())
-  interests     InterestUser[]
+  interests     UserInterest[]
+  UserProvider  UserProvider[]
 
   @@map("users")
+}
+
+model UserProvider {
+  id          Int     @id @default(autoincrement())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  provider_id String?
+  provider    String
+
+  @@map("users_providers")
 }
 
 model Interest {
   id           Int            @id @default(autoincrement())
   title        String
   createdAt    DateTime       @default(now())
-  InterestUser InterestUser[]
+  InterestUser UserInterest[]
 
   @@map("interests")
 }
 
-model InterestUser {
+model UserInterest {
   id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   interest   Interest @relation(fields: [interestId], references: [id])
   interestId Int
 
-  @@map("interest_users")
+  @@map("users_interests")
 }
 
 model EmailVerification {

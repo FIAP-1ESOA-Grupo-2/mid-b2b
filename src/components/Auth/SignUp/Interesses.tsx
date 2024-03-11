@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 import { IoIosAdd } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
@@ -12,58 +12,176 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-
-interface Todo {
-    id: number
-    text: string
-    completed: boolean
-}
+import { Spinner, useToast } from "@chakra-ui/react";
+import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
+import { Interest } from "@/types/Interest";
+import { createInterest, getInterests, setUserInterests } from "@/server/services/interestService";
+import { goToStep, resetSignUp, setData, setInterests, setInterestsSelected, setLoading } from "@/redux/reducers/signUpReducer";
+import { createUser } from "@/server/services/authService";
+import { createAccountProvider } from "@/server/services/authProvidersService";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next13-progressbar";
 
 export const Interesses = () => {
-    const initialTodos: Todo[] = [
-        { id: 1, text: 'Tecnologia', completed: false },
-        { id: 2, text: 'Financas', completed: false },
-        { id: 3, text: 'Contabilidade', completed: false },
-        { id: 4, text: 'ReactJS', completed: false },
-        { id: 5, text: 'NextJS', completed: false },
-        { id: 6, text: 'JavaScript', completed: false },
-        { id: 7, text: 'TypeScript', completed: false },
-        { id: 8, text: 'Java', completed: false },
-        { id: 9, text: 'Spring', completed: false },
-        { id: 10, text: 'DevOps', completed: false },
-        { id: 11, text: 'Tecnologia2', completed: false },
-        { id: 12, text: 'Financas2', completed: false },
-        { id: 13, text: 'Contabilidade2', completed: false },
-        { id: 14, text: 'ReactJS2', completed: false },
-        { id: 15, text: 'NextJS2', completed: false },
-        { id: 16, text: 'JavaScript2', completed: false },
-        { id: 17, text: 'TypeScript2', completed: false },
-        { id: 18, text: 'Java2', completed: false },
-        { id: 19, text: 'Spring2', completed: false },
-        { id: 20, text: 'DevOps2', completed: false },
-    ]
+    const signUp = useAppSelector(state => state.signUp)
+    const dispatch = useAppDispatch()
 
-    const [todos, setTodos] = useState<Todo[]>(initialTodos)
-    const [searchQuery, setSearchQuery] = useState<string>('')
-    const [newTodo, setNewTodo] = useState<string>('')
+    const [searchQuery, setSearchQuery] = useState('')
+    const [interestsLoaded, setInterestsLoaded] = useState(false)
+    const [interestsFiltered, setInterestsFiltered] = useState<Interest[]>([])
+    const [newTodo, setNewTodo] = useState('')
+    const [dialogOpen, setDialogOpen] = useState(false)
+
+    const toast = useToast()
+    const router = useRouter()
+
+    const handleGetInterests = async () => {
+        setInterestsLoaded(false)
+        const interests = await getInterests()
+
+        dispatch(setInterests(interests))
+
+        if (!searchQuery) {
+            setInterestsFiltered(interests)
+        }
+
+        setInterestsLoaded(true)
+    }
 
     const handleSearch = (query: string) => {
         setSearchQuery(query)
-        const filteredTodos = initialTodos.filter((todo) =>
-            todo.text.toLowerCase().includes(query.toLowerCase())
+
+        const interestsFiltered = signUp.interests.filter((item) =>
+            item.title.toLowerCase().includes(query.toLowerCase())
         )
-        setTodos(filteredTodos)
+
+        setInterestsFiltered(interestsFiltered)
     }
 
-    const handleAdd = () => {
-        if (newTodo.trim() === '') {
-            return
+
+    const handleCreateAccount = async () => {
+        const { data, interestsSelected, provider, step } = signUp
+
+        if (step == 3 && interestsSelected.length >= 3) {
+            dispatch(setLoading({ title: 'Por favor aguarde, estamos criando sua conta...', isLoading: true }))
+
+            const newUser = await createUser(data.name, data.email, data.cpf, data.sector, data.role, data.password, data.accountType, data.phone_number)
+            if (newUser.error || !newUser.data) {
+                toast({
+                    title: 'Erro ao criar conta',
+                    description: newUser.error,
+                    status: 'error',
+                    position: 'top-right',
+                    duration: 3000,
+                    isClosable: true
+                })
+
+                if (newUser.errorCode == 'EMAIL_ALREADY_IN_USE') {
+                    dispatch(setData({ ...data, emailVerified: false, email: '' }))
+                }
+
+                dispatch(goToStep(1))
+                dispatch(setLoading({ title: '', isLoading: false }))
+
+                return;
+            }
+
+            if (provider.provider) {
+                await createAccountProvider({ user_id: newUser.data.id, provider_id: provider.provider_id, provider: provider.provider })
+            }
+
+            await setUserInterests(newUser.data.id, signUp.interestsSelected)
+            await signIn("credentials", { email_or_cpf: data.email, password: data.password, redirect: false })
+
+
+            toast({
+                title: 'Conta criada com sucesso!',
+                description: 'Agora você pode iniciar a jornada de negócios',
+                status: 'success',
+                position: 'top-right',
+                duration: 2000,
+                isClosable: true
+            })
+
+            dispatch(setLoading({ title: '', isLoading: false }))
+            dispatch(resetSignUp())
+
+            router.push('/dashboard')
+        }
+    }
+
+
+    const handleAdd = async () => {
+        if (!newTodo) {
+            toast({
+                title: 'Digite o título do novo interesse...',
+                status: 'error',
+                position: 'top-right',
+                duration: 1000
+            })
+            return;
         }
 
-        const newTodoItem: Todo = { id: todos.length + 1, text: newTodo, completed: false }
-        setTodos([...todos, newTodoItem])
+        if (newTodo.length >= 50) {
+            toast({
+                title: 'O título deve ter no maximo 50 caracteres',
+                status: 'error',
+                position: 'top-right',
+                duration: 2000
+            })
+            return;
+        }
+
+        setInterestsLoaded(false)
+        const newInterest = await createInterest(newTodo)
+
+        if (newInterest.action == 'interest_exists') {
+            toast({
+                title: 'Este interesse já existe',
+                description: 'Adicionamos ele automaticamente no seu perfil!',
+                status: 'info',
+                position: 'top-right',
+                duration: 3000,
+                isClosable: true
+            })
+        }
+
+        if (!signUp.interestsSelected.includes(newInterest.data.id)) {
+            dispatch(setInterestsSelected([...signUp.interestsSelected, newInterest.data.id]))
+        }
+
+        if (newInterest.action == 'interest_created') {
+            toast({
+                title: 'Interesse adicionado com sucesso!',
+                description: 'Adicionamos ele automaticamente no seu perfil!',
+                status: 'success',
+                position: 'top-right',
+                duration: 3000,
+                isClosable: true
+            })
+        }
+
+        // Get with new interests
+        await handleGetInterests()
+
+        setDialogOpen(false)
         setNewTodo('')
+        setInterestsLoaded(true)
     }
+
+    const handleToggleInterestSelected = (id: number) => {
+        const interestsSelected = signUp.interestsSelected
+        if (interestsSelected.includes(id)) {
+            dispatch(setInterestsSelected(interestsSelected.filter((item) => item !== id)))
+        } else {
+            dispatch(setInterestsSelected([...interestsSelected, id]))
+        }
+    }
+
+    useEffect(() => {
+        handleGetInterests()
+    }, [])
+
     return (
         <section className="m-4 p-4 max-w-screen-md mx-auto">
             <h1 className="text-3xl font-bold text-center">Interesses</h1>
@@ -82,9 +200,10 @@ export const Interesses = () => {
                     }}
                     placeholder="Procurar..." />
             </div>
-            <Dialog>
+
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
-                    <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md my-4">
+                    <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md my-4" >
                         <IoIosAdd size={30} />
                         <h3 className="py-2.5 font-semibold">Adicionar novo interesse</h3>
                     </button>
@@ -115,18 +234,42 @@ export const Interesses = () => {
                 </DialogContent>
             </Dialog>
 
-            <div className="  pl-1">
-                <p className="text-mainblue text-base">Escolha mais de 3 interesses</p>
-                <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 ">
-                    {todos.map((todo) => (
-                        <li key={todo.id}
-                            className="px-3 py-2 bg-formbg text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit">
-                            <FaPlus color="#00ACFF" className="mr-3" />
-                            <span className="text-forminput">  {todo.text}</span>
-                        </li>
-                    ))}
-                </ul>
+            <div className="pl-1">
+                <p className="text-mainblue text-base">
+                    {signUp.interestsSelected.length < 3 && 'Escolha pelo menos 3 interesses'}
+                    {signUp.interestsSelected.length >= 3 && `${signUp.interestsSelected.length} interesses selecionados`}
+                </p>
+
+                {!interestsLoaded &&
+                    <div className="h-72 flex items-center justify-center">
+                        <Spinner color='blue.500' size='lg' thickness='3px' />
+                    </div>
+                }
+
+                {interestsLoaded &&
+                    <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 mb-10">
+                        {interestsFiltered.map((item) => (
+                            <li
+                                key={item.id}
+                                onClick={() => handleToggleInterestSelected(item.id)}
+                                className={`select-none px-3 py-2 transition bg-formbg text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit ${signUp.interestsSelected.includes(item.id) && "bg-mainblue"}`}
+                            >
+                                <FaPlus color={signUp.interestsSelected.includes(item.id) ? "white" : "#00ACFF"} className="mr-3" />
+                                <span className={`text-forminput  ${signUp.interestsSelected.includes(item.id) && "text-white"}`}>{item.title}</span>
+                            </li>
+                        ))}
+                    </ul>
+                }
+            </div>
+
+            <div className={`${signUp.step == 3 && signUp.interestsSelected.length >= 3 ? 'bottom-3 md:bottom-10' : '-bottom-20'} fixed mx-4 md:w-[750px] left-0 right-0 md:mx-auto duration-500 `}>
+                <button
+                    onClick={signUp.step == 3 && signUp.interestsSelected.length >= 3 ? handleCreateAccount : () => null}
+                    className="bg-emerald-600  text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500  hover:scale-110 duration-300 ease-in-out w-full"
+                >Criar conta</button>
             </div>
         </section>
+
+
     )
 }

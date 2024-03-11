@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import SignIn from "@/components/pages/SignIn";
+import SignIn from "@/components/pages/Auth/SignIn";
 
 export const metadata: Metadata = {
     title: 'Faça seu Login'

@@ -1,25 +1,28 @@
-"use client";
+import { DashboardHeader } from "@/components/Dashboard/Header";
+import { DashboardLeftSide } from "@/components/Dashboard/LeftSide";
+import { Metadata } from "next";
 
-import { checkUser, createUser } from "@/server/services/authService";
-import { signIn, useSession } from "next-auth/react";
+export const metadata = {
+    title: 'Dashboard',
+} satisfies Metadata
 
 const DashboardPage = () => {
-    const user = useSession()
-
-    const handleCreateUser = async () => {
-        console.log(await signIn("credentials", { email_or_cpf: "gS0yT@example.com2", password: "123456789", redirect: false }))
-    }
-
     return (
-        <>
-            STATUS: <mark>{user.status}</mark>
-            <br />
-            <br />
-            <hr />
-            <pre>{JSON.stringify(user.data)}</pre>
+        <main className="flex flex-col overflow-hidden h-screen bg-[#F2F3F5]">
+            <div className="hidden sm:block">
+                <DashboardHeader mode="desktop" />
+            </div>
 
-            <button onClick={handleCreateUser}>Create User</button>
-        </>
+            <div className="flex-1 mx-auto max-w-screen-xl overflow-auto w-full px-4 xl:px-0">
+                <div className="hidden sm:block">
+                    <DashboardLeftSide />
+                </div>
+            </div>
+
+            <div className="block sm:hidden">
+                <DashboardHeader mode="mobile" />
+            </div>
+        </main>
 
     )
 }
