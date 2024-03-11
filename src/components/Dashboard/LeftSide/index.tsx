@@ -45,7 +45,7 @@ export const DashboardLeftSide = ({ user }: Props) => {
 
         toast.close('signout-loading')
         toast({
-            title: 'Voce foi deslogado',
+            title: 'Você foi deslogado...',
             description: 'Volte sempre!',
             status: 'success',
             duration: 2000,
@@ -131,16 +131,6 @@ export const DashboardLeftSide = ({ user }: Props) => {
                     <FaPowerOff size={21} className="ml-0.5" />
                     <span className="font-semibold text-sm text-inherit mt-0.5 ml-1">Sair</span>
                 </button>
-            </div>
-
-            <div className="flex fixed bottom-0 z-10 w-72 items-center gap-2 px-6 py-3 bg-white rounded-t-xl border shadow-sm border-slate-200 select-none cursor-pointer hover:bg-slate-50">
-                <MdOutlineNotificationsNone size={26} className="text-zinc-500" />
-
-                <div className="flex flex-1 items-center justify-between">
-                    <span className="font-semibold text-sm mt-0.5 text-zinc-500">Notificações</span>
-
-                    <MdOutlineKeyboardArrowUp size={24} className="text-zinc-500 mt-1" />
-                </div>
             </div>
         </div>
     )

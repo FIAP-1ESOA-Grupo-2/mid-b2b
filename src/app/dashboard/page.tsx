@@ -1,15 +1,16 @@
+import { DashboardMainPage } from "@/components/pages/Dashboard/Main";
 import { Metadata } from "next";
 
 export const metadata = {
     title: 'Dashboard',
 } satisfies Metadata
 
-const DashboardPage = () => {
+const DashboarMain = () => {
     return (
         <main>
-            Pagina inicial
+            <DashboardMainPage />
         </main>
     )
 }
 
-export default DashboardPage
+export default DashboarMain

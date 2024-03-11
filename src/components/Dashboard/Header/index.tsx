@@ -24,7 +24,7 @@ export const DashboardHeader = ({ mode }: Props) => {
 
     return (
         <header className="bg-white shadow-sm border-b border-b-slate-200 px-0 sm:px-4 xl:px-0 h-16">
-            <nav className='flex justify-between items-center max-w-[1380px] mx-auto  h-full'>
+            <nav className='flex justify-between items-center max-w-screen-xl mx-auto  h-full'>
                 {mode == "desktop" &&
                     <Link href='/dashboard'>
                         <Image
