@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, Skeleton, SkeletonCircle, useToast } from "@chakra-ui/react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { MdOutlineOpenInNew } from "react-icons/md";
 import Icon1 from '@/assets/images/dashboard-leftside-icon-1.svg';
@@ -27,7 +27,6 @@ type Props = {
 }
 
 export const DashboardLeftSide = ({ user }: Props) => {
-    const auth = useSession()
     const pathname = usePathname()
     const toast = useToast()
 
@@ -49,9 +48,7 @@ export const DashboardLeftSide = ({ user }: Props) => {
                 href="/dashboard/profile"
                 className="flex gap-3 px-7 py-5 bg-white rounded-xl w-80 items-start border shadow-sm border-slate-200 cursor-pointer select-none transition-all hover:bg-slate-50"
             >
-                <SkeletonCircle isLoaded={auth.status == 'authenticated'} width={10} height={10}>
-                    <Avatar name={auth.data?.user.name} width={10} height={10} />
-                </SkeletonCircle>
+                <Avatar name={user.name} />
 
                 <div className="flex-1">
                     <div className="w-full flex items-center gap-2 justify-between" >
