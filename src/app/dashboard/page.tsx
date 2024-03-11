@@ -1,12 +1,15 @@
 import { DashboardHeader } from "@/components/Dashboard/Header";
 import { DashboardLeftSide } from "@/components/Dashboard/LeftSide";
+import { isAuthenticated } from "@/middlewares/isAuth";
 import { Metadata } from "next";
 
 export const metadata = {
     title: 'Dashboard',
 } satisfies Metadata
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+    const user = await isAuthenticated()
+
     return (
         <main className="flex flex-col overflow-hidden h-screen bg-[#F2F3F5]">
             <div className="hidden sm:block">
@@ -15,7 +18,9 @@ const DashboardPage = () => {
 
             <div className="flex-1 mx-auto max-w-screen-xl overflow-auto w-full px-4 xl:px-0">
                 <div className="hidden sm:block">
-                    <DashboardLeftSide />
+                    <DashboardLeftSide
+                        user={user}
+                    />
                 </div>
             </div>
 
