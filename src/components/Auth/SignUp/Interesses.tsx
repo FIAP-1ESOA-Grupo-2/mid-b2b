@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { MdOutlineSearch } from "react-icons/md";
 import { IoIosAdd } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
@@ -111,7 +111,9 @@ export const Interesses = () => {
     }
 
 
-    const handleAdd = async () => {
+    const handleAdd = async (e: FormEvent) => {
+        e.preventDefault()
+
         if (!newTodo) {
             toast({
                 title: 'Digite o título do novo interesse...',
@@ -203,7 +205,7 @@ export const Interesses = () => {
 
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogTrigger asChild>
-                    <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md my-4" >
+                    <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md my-4 outline-none" >
                         <IoIosAdd size={30} />
                         <h3 className="py-2.5 font-semibold">Adicionar novo interesse</h3>
                     </button>
@@ -215,7 +217,7 @@ export const Interesses = () => {
                             Adicione um novo interesse. Este interesse será visível para todos os usuários.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    <form className="grid gap-4 " onSubmit={handleAdd}>
                         <div className="flex items-center gap-4">
                             <Label htmlFor="name" className="text-right text-base">
                                 Interesse:
@@ -225,12 +227,12 @@ export const Interesses = () => {
                                 id="name"
                                 value={newTodo}
                                 className="w-full text-base border  bg-formbg rounded-lg text-forminput py-3 pl-4 outline-none pr-6"
-                                onChange={(e) => setNewTodo(e.target.value)} />
+                                onChange={(e) => setNewTodo(e.target.value)}
+                            />
                         </div>
-                    </div>
-                    <DialogFooter>
-                        <button type="submit" className="bg-mainblue text-formbg px-6 py-3 rounded-lg text-base hover:bg-mainbluehover ease-in-out duration-100" onClick={handleAdd}>Adicionar</button>
-                    </DialogFooter>
+
+                        <button type="submit" className="mt-6 bg-mainblue text-formbg px-6 py-3 rounded-lg text-base hover:bg-mainbluehover ease-in-out duration-100 outline-none">Adicionar</button>
+                    </form>
                 </DialogContent>
             </Dialog>
 
@@ -252,7 +254,7 @@ export const Interesses = () => {
                             <li
                                 key={item.id}
                                 onClick={() => handleToggleInterestSelected(item.id)}
-                                className={`select-none px-3 py-2 transition bg-formbg text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit ${signUp.interestsSelected.includes(item.id) && "bg-mainblue"}`}
+                                className={`select-none px-3 py-2 transition bg-formbg text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit ${signUp.interestsSelected.includes(item.id) && "bg-[#007AB5]"}`}
                             >
                                 <FaPlus color={signUp.interestsSelected.includes(item.id) ? "white" : "#00ACFF"} className="mr-3" />
                                 <span className={`text-forminput  ${signUp.interestsSelected.includes(item.id) && "text-white"}`}>{item.title}</span>
@@ -268,7 +270,7 @@ export const Interesses = () => {
                     className="bg-emerald-600  text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500  hover:scale-110 duration-300 ease-in-out w-full"
                 >Criar conta</button>
             </div>
-        </section>
+        </section >
 
 
     )
