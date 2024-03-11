@@ -17,13 +17,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isToggled, setToggled] = useState(true);
 
     type Inputs = z.infer<typeof signInSchema>
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+    const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<Inputs>({
         resolver: zodResolver(signInSchema)
     })
+    const watchEmailOrCpf = watch('email_or_cpf')
 
     const toast = useToast()
     const router = useRouter()
@@ -105,11 +105,15 @@ const SignIn = () => {
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
-    };
+    }
 
-    const handleToggle = () => {
-        setToggled(!isToggled);
-    };
+    useEffect(() => {
+        if (!watchEmailOrCpf) return;
+
+        if (/^[0-9]*$/.test(watchEmailOrCpf)) {
+            setValue('email_or_cpf', watchEmailOrCpf.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"))
+        }
+    }, [watchEmailOrCpf])
 
     useEffect(() => {
         if (errors.email_or_cpf || errors.password) {
