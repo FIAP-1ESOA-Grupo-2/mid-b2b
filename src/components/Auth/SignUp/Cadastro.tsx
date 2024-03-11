@@ -110,30 +110,21 @@ export const Cadastro = () => {
     const handlePhoneNumberChange = () => {
         if (!signUpData.phone_number) return;
 
-        const input = signUpData.phone_number.replace(/\D/g, '')
-        let formattedInput = ''
-
-        if (input.length <= 2) {
-            formattedInput = `(${input}`
-        } else if (input.length <= 6) {
-            formattedInput = `(${input.slice(0, 2)}) ${input.slice(2)}`
-        } else {
-            formattedInput = `(${input.slice(0, 2)}) ${input.slice(2, 6)}-${input.slice(6)}`
-        }
+        let formattedInput: string = signUpData.phone_number.replace(/\D/g, '')
+            .replace(/(?:(^\+\d{2})?)(?:([1-9]{2})|([0-9]{3})?)(\d{4,5})(\d{4})/,
+                (_fullMatch, country, ddd, dddWithZero, prefixTel, suffixTel) => {
+                    if (country) return `${country} (${ddd || dddWithZero}) ${prefixTel}-${suffixTel}`;
+                    if (ddd || dddWithZero) return `(${ddd || dddWithZero}) ${prefixTel}-${suffixTel}`;
+                    if (prefixTel && suffixTel) return `${prefixTel}-${suffixTel}`;
+                    return formattedInput;
+                }
+            );
 
         dispatch(setData({ ...signUpData, phone_number: formattedInput }))
     };
 
     const handleCPFChange = () => {
-        let formattedInput = signUpData.cpf
-
-        if (formattedInput.length === 3) {
-            formattedInput = `${formattedInput.slice(0, 3)}.`
-        } else if (formattedInput.length === 7) {
-            formattedInput = `${formattedInput.slice(0, 7)}.`
-        } else if (formattedInput.length === 11) {
-            formattedInput = `${formattedInput.slice(0, 11)}-`
-        }
+        let formattedInput = signUpData.cpf.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 
         dispatch(setData({ ...signUpData, cpf: formattedInput }))
     }
@@ -182,6 +173,7 @@ export const Cadastro = () => {
                         placeholder="CPF *"
                         {...register("cpf", { value: signUpData.cpf, onChange: e => handleValueChange(e, 'cpf') })}
                         value={signUpData.cpf}
+                        maxLength={14}
                         type="text"
                         className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.cpf ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
                     />
