@@ -10,7 +10,7 @@ export const signUpSchema = z.object({
         .regex(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/, 'CPF inválido'),
     phone_number: z
         .string()
-        .max(14, 'O telefone deve ter no maximo 14 caracteres'),
+        .max(15, 'O telefone deve ter no maximo 15 caracteres'),
     email: z
         .string()
         .min(1, 'O email é obrigatório')
