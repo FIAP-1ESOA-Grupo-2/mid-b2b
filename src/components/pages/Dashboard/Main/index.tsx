@@ -17,7 +17,6 @@ export const DashboardMainPage = async () => {
             />
 
             <FindDeals />
-            
             <MeetingPlace />
         </section>
     )

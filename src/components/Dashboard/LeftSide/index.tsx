@@ -3,7 +3,7 @@
 import { Avatar, Skeleton, SkeletonCircle, useToast } from "@chakra-ui/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { MdOutlineOpenInNew } from "react-icons/md";
+import { MdAdd, MdOutlineOpenInNew } from "react-icons/md";
 import Icon1 from '@/assets/images/dashboard-leftside-icon-1.svg';
 import Icon2 from '@/assets/images/dashboard-leftside-icon-2.svg';
 import Icon3 from '@/assets/images/dashboard-leftside-icon-3.svg';
@@ -77,7 +77,7 @@ export const DashboardLeftSide = ({ user }: Props) => {
                 </div>
             </Link>
 
-            <div className="flex flex-col gap-3 bg-white rounded-xl border shadow-sm border-slate-200">
+            <div className="flex flex-col gap-3 bg-white rounded-xl border shadow-sm border-slate-200 p-2 h-72 ">
                 <LeftSideCalendar />
             </div>
 

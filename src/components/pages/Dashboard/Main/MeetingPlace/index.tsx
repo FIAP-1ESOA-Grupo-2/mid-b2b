@@ -9,7 +9,7 @@ export const MeetingPlace = () => {
     return (
         <section className='flex gap-5 flex-wrap'>
             <section
-                style={{ backgroundImage: `url("/imgs/promotion-card-background.svg")`, backgroundRepeat: "no-repeat", backgroundSize: "cover", flex: 1.2 }}
+                style={{ backgroundImage: `url("/imgs/promotion-card-background.svg")`, backgroundSize: "cover", flex: 1.2, backgroundPosition: "center" }}
                 className="flex  flex-col bg-mainblue text-white py-8 sm:py-0 px-10 rounded-xl border shadow-sm border-slate-200 gap-5 items-start justify-center"
             >
                 <h1 className='text-3xl font-bold mb-3'>Dicas para a sua segurança</h1>

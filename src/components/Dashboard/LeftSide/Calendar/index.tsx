@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import { Calendar } from '@natscale/react-calendar';
-
-import '@natscale/react-calendar/dist/main.css';
+import './styles.css';
 
 export const LeftSideCalendar = () => {
     const [value, setValue] = useState(new Date());
@@ -45,6 +44,6 @@ export const LeftSideCalendar = () => {
         onChange={onChange}
         monthsLabel={monthsLabel}
         weekDaysLabel={weekDaysLabel}
-        fontSize={15} 
+        fontSize={15}
     />
 }

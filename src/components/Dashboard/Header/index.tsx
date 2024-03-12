@@ -2,7 +2,7 @@
 
 import LogoImg from '@/assets/images/logo.svg'
 import Image from 'next/image'
-import { MdHome } from "react-icons/md";
+import { MdHome, MdMenu } from "react-icons/md";
 import { MdOutlineHome } from "react-icons/md";
 import { MdNotificationsNone } from "react-icons/md";
 import { MdNotifications } from "react-icons/md";
@@ -14,51 +14,82 @@ import { MdOutlineSettings } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { HiOutlineMenu } from "react-icons/hi";
+import { Tooltip } from '@chakra-ui/react';
+import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
+import { setLeftSidebarToggle } from '@/redux/reducers/appReducer';
 
 type Props = {
     mode: "mobile" | "desktop"
 }
 
 export const DashboardHeader = ({ mode }: Props) => {
+    const { leftSidebarOpen } = useAppSelector((state) => state.app)
+    const dispatch = useAppDispatch()
+
     const pathname = usePathname()
+
+    const handleToggleLeftSide = () => dispatch(setLeftSidebarToggle())
 
     return (
         <header className="bg-white shadow-sm border-b border-b-slate-200 px-0 sm:px-4 xl:px-0 h-16">
-            <nav className='flex justify-between items-center max-w-screen-xl mx-auto  h-full'>
+            <nav className='flex justify-between items-center max-w-screen-xl mx-auto h-full'>
                 {mode == "desktop" &&
                     <Link href='/dashboard'>
                         <Image
                             src={LogoImg}
                             alt="logo"
                             priority
+                            height={36}
                         />
                     </Link>
                 }
 
-                <div className='flex items-center sm:gap-12  justify-around sm:justify-end w-full'>
-                    <Link
-                        href='/dashboard'
-                        className={`${pathname === '/dashboard' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
-                    >
-                        {pathname === '/dashboard' ? <MdHome size={31} /> : <MdOutlineHome size={31} />}
-                    </Link>
+                <div className='flex items-center sm:gap-12 justify-around sm:justify-end w-full'>
+                    <Tooltip label='Início' openDelay={700}>
+                        <Link
+                            href='/dashboard'
+                            className={`${pathname === '/dashboard' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                        >
+                            {pathname === '/dashboard' ? <MdHome size={31} /> : <MdOutlineHome size={31} />}
+                        </Link>
+                    </Tooltip>
 
-                    <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
-                        <MdNotificationsNone size={30} />
-                    </button>
+                    <Tooltip label='Notificações' openDelay={700}>
+                        <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
+                            <MdNotificationsNone size={30} />
+                        </button>
+                    </Tooltip>
 
-                    <Link
-                        href='/dashboard/profile'
-                        className={`${pathname === '/dashboard/profile' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
-                    >
-                        {pathname === '/dashboard/profile' ? <BiSolidUser size={28} /> : <BiUser size={28} />}
-                    </Link>
-                    <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
-                        <MdOutlineBusinessCenter size={30} />
-                    </button>
-                    <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
-                        <MdOutlineSettings size={29} />
-                    </button>
+                    <Tooltip label='Meu perfil' openDelay={700}>
+                        <Link
+                            href='/dashboard/profile'
+                            className={`${pathname === '/dashboard/profile' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                        >
+                            {pathname === '/dashboard/profile' ? <BiSolidUser size={28} /> : <BiUser size={28} />}
+                        </Link>
+                    </Tooltip>
+
+                    <Tooltip label='Encontros' openDelay={700}>
+                        <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
+                            <MdOutlineBusinessCenter size={30} />
+                        </button>
+                    </Tooltip>
+
+                    <Tooltip label='Configurações' openDelay={700}>
+                        <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
+                            <MdOutlineSettings size={29} />
+                        </button>
+                    </Tooltip>
+
+                    <Tooltip label={leftSidebarOpen ? 'Fechar menu lateral' : 'Abrir menu lateral'} openDelay={200}>
+                        <button
+                            onClick={handleToggleLeftSide}
+                            className='text-mainblue outline-none transition-all border rounded-md bg-[#e5eefd] p-1 hover:bg-[#d5e4ff]'
+                        >
+                            <MdMenu size={25} />
+                        </button>
+                    </Tooltip>
                 </div>
             </nav>
         </header>

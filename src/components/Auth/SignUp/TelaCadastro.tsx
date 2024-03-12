@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Cadastro } from "./Cadastro"
 import { Interesses } from "./Interesses"
 import { TipoConta } from "./TipoConta"
@@ -31,10 +31,8 @@ const steps = [
 ]
 
 const TelaCadastro = () => {
-    const [width, setWidth] = useState(0);
-
     const signUp = useAppSelector(state => state.signUp)
-    const dispatch = useAppDispatch() 
+    const dispatch = useAppDispatch()
 
     const { activeStep, setActiveStep } = useSteps({
         index: 0,
@@ -43,27 +41,16 @@ const TelaCadastro = () => {
 
     const handleStepOnClick = (index: number) => dispatch(goToStep(index))
 
-    useEffect(() => { 
-        // Set width initially
-        setWidth(window.innerWidth)
-        
-        const updateDimensions = () => setWidth(window.innerWidth)
-
-        window.addEventListener("resize", updateDimensions);
-        return () => window.removeEventListener("resize", updateDimensions);
-    }, [])
-
     useEffect(() => {
         setActiveStep(signUp.step)
     }, [signUp.step])
 
     return (
         <div className="flex flex-col overflow-none  h-screen max-w-screen-xl mx-4 xl:mx-auto">
-            <div className="my-6">
+            <div className="my-6 hidden lg:block">
                 <Stepper
                     index={activeStep}
                     className={`px-6 py-2 border border-slate-200  bg-slate-50 select-none ${signUp.loading.isLoading ? 'pointer-events-none' : ''} ${signUp.loading.isLoading ? 'rounded-t-lg ' : 'rounded-lg'}`}
-                    orientation={width != 0 && width < 920 ? 'vertical' : 'horizontal'}
                 >
                     {steps.map((step, index) => (
                         <Step key={index}>
