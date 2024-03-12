@@ -22,6 +22,7 @@ import { usePathname } from "next/navigation";
 import { FaPowerOff } from "react-icons/fa6";
 import { User } from "@/types/Auth";
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
+import { LeftSideCalendar } from "./Calendar";
 
 type Props = {
     user: User
@@ -75,6 +76,10 @@ export const DashboardLeftSide = ({ user }: Props) => {
                     </div>
                 </div>
             </Link>
+
+            <div className="flex flex-col gap-3 bg-white rounded-xl border shadow-sm border-slate-200">
+                <LeftSideCalendar />
+            </div>
 
             <div className="flex flex-col gap-3 px-6 py-5 bg-white rounded-xl border shadow-sm border-slate-200">
                 <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
