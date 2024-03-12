@@ -1,3 +1,5 @@
+"use client";
+
 import Icon3 from '@/assets/images/dashboard-leftside-icon-3.svg';
 import Icon4 from '@/assets/images/dashboard-leftside-icon-4.svg';
 import { IoIosArrowRoundForward } from "react-icons/io";
