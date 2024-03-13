@@ -4,20 +4,22 @@ import { useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { MdEdit } from "react-icons/md";
 import { Inputs } from "..";
+import { Skeleton } from "@chakra-ui/react";
 
 type Props = {
     id: keyof Inputs,
     placeholder?: string,
     errorMessage?: string,
     defaultValue?: string,
+    isLoading?: boolean,
     register: UseFormRegister<Inputs>
 }
 
-export const Input = ({ id, placeholder, errorMessage, defaultValue, register }: Props) => {
+export const Input = ({ id, placeholder, errorMessage, defaultValue, isLoading, register }: Props) => {
     const [focused, setFocused] = useState(false);
 
     return (
-        <>
+        <Skeleton style={{ borderRadius: 5 }} isLoaded={!isLoading}>
             <div className="flex bg-formbg rounded-lg items-center"  >
                 <input
                     {...register(id)}
@@ -39,7 +41,6 @@ export const Input = ({ id, placeholder, errorMessage, defaultValue, register }:
                     {errorMessage}
                 </small>
             )}
-        </>
-
+        </Skeleton>
     );
 };
