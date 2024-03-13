@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { updateUserSchema } from "@/lib/validators/userValidator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@chakra-ui/react";
+import { Skeleton, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { updateUser } from "@/server/services/authService";
 import { signIn } from "next-auth/react";
@@ -31,6 +31,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
     const watchPhoneNumber = watch('phone_number')
 
     const [accountType, setAccountType] = useState(user.accountType)
+    const [loading, setLoading] = useState(false)
 
     const handleSetAccountType = (accountType: UserAccountType) => setAccountType(accountType)
 
@@ -43,6 +44,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
             duration: 10 * 1000,
             id: 'update-user-loading',
         })
+        setLoading(true)
 
         const response = await updateUser(user.id, {
             ...data,
@@ -55,6 +57,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                 redirect: false
             })
 
+            setLoading(false)
             toast.close('update-user-loading')
 
             toast({
@@ -72,6 +75,8 @@ export const DashboardProfilePage = ({ user }: Props) => {
         }
 
         if (response.errorCode) {
+            setLoading(false)
+
             toast.close('update-user-loading')
 
             toast({
@@ -134,7 +139,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
             <form className="flex flex-col gap-6 p-8" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-1">
                     <Label text="Tipo de conta: " required />
-                    <div className="flex">
+                    <Skeleton className="flex" style={{ borderRadius: 5 }} isLoaded={!loading}>
                         <button
                             type="button"
                             onClick={() => handleSetAccountType('buyer')}
@@ -147,7 +152,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                             className={`text-[15px] py-1.5 w-full border-2 outline-none border-mainblue transition-all ${accountType === 'seller' ? 'bg-mainblue text-white' : 'text-mainblue hover:bg-blue-50 hover:border-blue-300'} rounded-r-lg`}>
                             Vendedor
                         </button>
-                    </div>
+                    </Skeleton>
                 </div>
 
                 <div className="flex flex-col gap-0.5">
@@ -158,6 +163,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                         register={register}
                         defaultValue={user.name}
                         errorMessage={errors.name?.message}
+                        isLoading={loading}
                     />
                 </div>
 
@@ -169,6 +175,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                         register={register}
                         defaultValue={user.cpf}
                         errorMessage={errors.cpf?.message}
+                        isLoading={loading}
                     />
                 </div>
 
@@ -180,6 +187,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                         register={register}
                         defaultValue={user.phone_number ?? ''}
                         errorMessage={errors.phone_number?.message}
+                        isLoading={loading}
                     />
                 </div>
 
@@ -191,6 +199,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                         register={register}
                         defaultValue={user.sector ?? ''}
                         errorMessage={errors.sector?.message}
+                        isLoading={loading}
                     />
                 </div>
 
@@ -202,21 +211,28 @@ export const DashboardProfilePage = ({ user }: Props) => {
                         register={register}
                         defaultValue={user.role ?? ''}
                         errorMessage={errors.role?.message}
+                        isLoading={loading}
                     />
                 </div>
 
                 <div className="flex flex-col gap-0.5">
                     <Label htmlfor="new_password" text="Nova senha:" />
-                    <Input id="new_password" placeholder="Ex. Nova senha" register={register} errorMessage={errors.new_password?.message} />
+                    <Input
+                        id="new_password"
+                        placeholder="Ex. Nova senha"
+                        register={register}
+                        errorMessage={errors.new_password?.message}
+                        isLoading={loading}
+                    />
                 </div>
 
-                <div className="mt-3">
+                <Skeleton className="mt-3" style={{ borderRadius: 5 }} isLoaded={!loading}>
                     <button
                         type="submit"
                         className={`py-2 w-full border-2 outline-none border-mainblue transition-all  bg-mainblue text-white hover:bg-mainbluehover hover:border-mainbluehover rounded-lg`}>
                         Salvar alterações
                     </button>
-                </div>
+                </Skeleton>
             </form>
         </div>
     )
