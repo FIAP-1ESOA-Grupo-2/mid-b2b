@@ -17,22 +17,28 @@ import Link from 'next/link';
 import { HiOutlineMenu } from "react-icons/hi";
 import { Tooltip } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
-import { setLeftSidebarToggle } from '@/redux/reducers/appReducer';
+import { setLeftSidebarDesktopToggle, setLeftSidebarMobileToggle } from '@/redux/reducers/appReducer';
 
 type Props = {
     mode: "mobile" | "desktop"
 }
 
 export const DashboardHeader = ({ mode }: Props) => {
-    const { leftSidebarOpen } = useAppSelector((state) => state.app)
+    const { leftSidebarOpenDesktop, deviceWidth } = useAppSelector((state) => state.app)
     const dispatch = useAppDispatch()
 
     const pathname = usePathname()
 
-    const handleToggleLeftSide = () => dispatch(setLeftSidebarToggle())
+    const handleToggleLeftSide = () => {
+        if (deviceWidth < 1024) {
+            dispatch(setLeftSidebarMobileToggle())
+        } else {
+            dispatch(setLeftSidebarDesktopToggle())
+        }
+    }
 
     return (
-        <header className="bg-white shadow-sm border-b border-b-slate-200 px-0 sm:px-4 xl:px-0 h-16">
+        <header className="bg-white shadow-sm border-b border-b-slate-200 px-0 sm:px-4 box-content h-16">
             <nav className='flex justify-between items-center max-w-screen-xl mx-auto h-full'>
                 {mode == "desktop" &&
                     <Link href='/dashboard'>
@@ -82,14 +88,16 @@ export const DashboardHeader = ({ mode }: Props) => {
                         </button>
                     </Tooltip>
 
-                    <Tooltip label={leftSidebarOpen ? 'Fechar menu lateral' : 'Abrir menu lateral'} openDelay={200}>
-                        <button
-                            onClick={handleToggleLeftSide}
-                            className='text-mainblue outline-none transition-all border rounded-md bg-[#e5eefd] p-1 hover:bg-[#d5e4ff]'
-                        >
-                            <MdMenu size={25} />
-                        </button>
-                    </Tooltip>
+                    <div className='hidden sm:block'>
+                        <Tooltip label={leftSidebarOpenDesktop ? 'Fechar menu lateral' : 'Abrir menu lateral'} openDelay={200}>
+                            <button
+                                onClick={handleToggleLeftSide}
+                                className='text-mainblue outline-none transition-all border rounded-md bg-[#e5eefd] p-1 hover:bg-[#d5e4ff]'
+                            >
+                                <MdMenu size={25} />
+                            </button>
+                        </Tooltip>
+                    </div>
                 </div>
             </nav>
         </header>

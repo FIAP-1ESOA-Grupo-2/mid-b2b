@@ -1,25 +1,31 @@
 import { AppState } from '@/types/App'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState: AppState = {
-    leftSidebarOpen: true
+    leftSidebarOpenDesktop: true,
+    leftSidebarOpenMobile: false,
+    deviceWidth: 0
 }
 
 export const appReducer = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setLeftSidebarToggle: (state) => {
-            state.leftSidebarOpen = !state.leftSidebarOpen
+        setLeftSidebarDesktopToggle: (state) => {
+            state.leftSidebarOpenDesktop = !state.leftSidebarOpenDesktop
         },
-        setLeftSidebarClose: (state) => {
-            state.leftSidebarOpen = false
+        setLeftSidebarMobileToggle: (state) => {
+            state.leftSidebarOpenMobile = !state.leftSidebarOpenMobile
+        },
+        setDeviceWidth: (state, action: PayloadAction<AppState['deviceWidth']>) => {
+            state.deviceWidth = action.payload
         }
     }
 })
 
 export const {
-    setLeftSidebarToggle,
-    setLeftSidebarClose
+    setLeftSidebarDesktopToggle,
+    setLeftSidebarMobileToggle,
+    setDeviceWidth
 } = appReducer.actions
 export default appReducer.reducer

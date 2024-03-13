@@ -1,3 +1,5 @@
 export type AppState = {
-    leftSidebarOpen: boolean
+    leftSidebarOpenDesktop: boolean,
+    leftSidebarOpenMobile: boolean,
+    deviceWidth: number
 }
