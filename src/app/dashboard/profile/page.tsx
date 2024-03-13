@@ -1,12 +1,19 @@
-import { DashboardHeader } from "@/components/Dashboard/Header";
-import { DashboardLeftSide } from "@/components/Dashboard/LeftSide";
-import { isAuthenticated } from "@/middlewares/isAuth";
+import { DashboardProfilePage } from "@/components/pages/Dashboard/Profile"
+import { isAuthenticated } from "@/middlewares/isAuth"
+import { Metadata } from "next"
 
+export const metadata = {
+    title: 'Dashboard > Meu Perfil',
+} satisfies Metadata
 
-const DashboardProfile = () => {
+const DashboardProfile = async () => {
+    const user = await isAuthenticated()
+
     return (
-        <main className="bg-gray-500">
-            Profile page
+        <main>
+            <DashboardProfilePage
+                user={user}
+            />
         </main>
     )
 }

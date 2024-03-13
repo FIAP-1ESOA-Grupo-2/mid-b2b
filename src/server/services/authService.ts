@@ -157,3 +157,54 @@ export const updatePassword = async (email: string, password: string) => {
         }
     }
 }
+
+export const updateUser = async (id: number, data: {
+    name?: string,
+    cpf?: string,
+    new_password?: string,
+    phone_number?: string,
+    sector?: string,
+    role?: string,
+    accountType?: UserAccountType
+}) => {
+    const user = await prisma.user.findUnique({ where: { id } })
+
+    if (!user) return { error: 'Conta não encontrada', errorCode: 'ACCOUNT_NOT_FOUND' };
+
+    if (data.cpf !== user.cpf) {
+        if (await prisma.user.findUnique({ where: { cpf: data.cpf } })) {
+            return { error: 'CPF já está sendo usado.', errorCode: 'CPF_ALREADY_IN_USE' }
+        }
+    }
+
+    if (data.new_password) {
+        await updatePassword(user.email, data.new_password)
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: { id }, data: {
+            name: data.name ?? user.name,
+            cpf: data.cpf ?? user.cpf,
+            phoneNumber: data.phone_number ?? user.phoneNumber,
+            sector: data.sector ?? user.sector,
+            role: data.role ?? user.role,
+            accountType: data.accountType ?? user.accountType
+        }
+    })
+
+    const updatedData = {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        cpf: updatedUser.cpf,
+        phone_number: updatedUser.phoneNumber,
+        sector: updatedUser.sector,
+        role: updatedUser.role,
+        accountType: updatedUser.accountType as UserAccountType,
+        createdAt: updatedUser.createdAt
+    }
+
+    return {
+        data: updatedData
+    }
+}
