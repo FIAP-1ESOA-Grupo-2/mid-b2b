@@ -16,7 +16,7 @@ export const Greetings = ({ user }: Props) => {
                 <div className="w-full">
                     <div className="flex items-center justify-between ">
                         <div>
-                            <h1 className="font-bold text-xl mb-2">Olá, {user.name}!</h1>
+                            <h1 className="font-bold text-xl mb-2 text-slate-700">Olá, {user.name}!</h1>
                             <p className="text-base mb-2">Pronto para fazer negócios?</p>
                         </div>
                         <div className="sm:hidden mr-1.5">

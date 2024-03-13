@@ -1,13 +1,13 @@
-<svg width="348" height="178" viewBox="0 0 348 178" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="290" height="151" viewBox="0 0 290 151" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_1516_6)">
-<rect width="348" height="178" fill="#007AB5"/>
-<ellipse opacity="0.4" cx="318.5" cy="115.5" rx="137.5" ry="124.5" fill="white"/>
-<circle opacity="0.4" cx="284" cy="101" r="120" fill="white"/>
-<ellipse opacity="0.4" cx="337.5" cy="126" rx="137.5" ry="126" fill="white"/>
+<rect width="290" height="151" fill="#007AB5"/>
+<ellipse opacity="0.4" cx="289.5" cy="114.5" rx="137.5" ry="124.5" fill="white"/>
+<circle opacity="0.4" cx="246" cy="100" r="120" fill="white"/>
+<ellipse opacity="0.4" cx="325.5" cy="122" rx="137.5" ry="126" fill="white"/>
 </g>
 <defs>
 <clipPath id="clip0_1516_6">
-<rect width="348" height="178" fill="white"/>
+<rect width="290" height="151" fill="white"/>
 </clipPath>
 </defs>
 </svg>
