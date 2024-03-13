@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 import { Calendar } from '@natscale/react-calendar';
 import './styles.css';
+import { Value } from '@natscale/react-calendar/dist/utils/types';
 
 export const LeftSideCalendar = () => {
     const [value, setValue] = useState(new Date());
@@ -33,8 +34,8 @@ export const LeftSideCalendar = () => {
 
 
     const onChange = useCallback(
-        (val) => {
-            setValue(val);
+        (val: Value) => {
+            setValue(val as Date);
         },
         [setValue],
     );
