@@ -9,6 +9,16 @@ export const getInterests = async () => {
     return interests
 }
 
+export const getUserInterests = async (userId: number) => {
+    const userInterests = await prisma.userInterest.findMany({
+        where: { userId },
+        select: { interest: { select: { id: true, title: true } } }
+    })
+
+    const interests = userInterests.map((interest) => interest.interest)
+    return interests
+}
+
 export const createInterest = async (title: string) => {
     const interestExists = await prisma.interest.findFirst({ where: { title } })
     if (interestExists) return {

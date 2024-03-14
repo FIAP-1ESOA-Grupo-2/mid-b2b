@@ -129,14 +129,14 @@ export const DashboardProfilePage = ({ user }: Props) => {
 
     return (
         <div className="bg-white rounded-xl border shadow-sm border-slate-200 ">
-            <div className="border-b border-slate-200 rounded-t-xl pt-5 pb-4 px-8">
+            <div className="border-b border-slate-200 rounded-t-xl pt-5 pb-4 px-4 lg:px-8">
                 <span className="text-xl font-bold text-slate-700">Meu Perfil</span>
                 <p className="text-sm text-slate-500">
                     Acesse e edite suas informações pessoais, depois clique em salvar!
                 </p>
             </div>
 
-            <form className="flex flex-col gap-6 p-8" onSubmit={handleSubmit(onSubmit)}>
+            <form className="flex flex-col gap-6 py-8  px-4 lg:px-8" onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-1">
                     <Label text="Tipo de conta: " required />
                     <Skeleton className="flex" style={{ borderRadius: 5 }} isLoaded={!loading}>
@@ -229,7 +229,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                 <Skeleton className="mt-3" style={{ borderRadius: 5 }} isLoaded={!loading}>
                     <button
                         type="submit"
-                        className={`py-2 w-full border-2 outline-none border-mainblue transition-all  bg-mainblue text-white hover:bg-mainbluehover hover:border-mainbluehover rounded-lg`}>
+                        className={`py-2 w-full border-2 outline-none border-mainblue transition-all shadow-md  bg-mainblue text-white hover:bg-mainbluehover hover:border-mainbluehover rounded-lg`}>
                         Salvar alterações
                     </button>
                 </Skeleton>
