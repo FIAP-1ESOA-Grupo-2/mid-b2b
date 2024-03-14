@@ -14,10 +14,9 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { IoIosAdd } from "react-icons/io";
-import { Skeleton, Spinner, useToast } from "@chakra-ui/react";
+import { Skeleton, useToast } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa";
-import { createInterest, deleteUserInterests, getInterests, getUserInterests, setUserInterests } from "@/server/services/interestService";
-import { useRouter } from "next/navigation";
+import { createInterest, deleteUserInterests, getInterests, setUserInterests } from "@/server/services/interestService";
 
 type Props = {
     user: User,
@@ -35,10 +34,8 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
     const [dialogOpen, setDialogOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [btnVisible, setBtnVisible] = useState(false)
-    const [interestsUpdated, setInterestsUpdated] = useState(false)
 
     const toast = useToast()
-    const router = useRouter()
 
     const handleGetInterests = async () => {
         setLoading(true)

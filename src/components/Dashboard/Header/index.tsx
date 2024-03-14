@@ -83,9 +83,12 @@ export const DashboardHeader = ({ mode }: Props) => {
                     </Tooltip>
 
                     <Tooltip label='Configurações' openDelay={700}>
-                        <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
-                            <MdOutlineSettings size={29} />
-                        </button>
+                        <Link
+                            href='/dashboard/settings'
+                            className={`${pathname === '/dashboard/settings' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                        >
+                            {pathname === '/dashboard/settings' ? <MdSettings size={29} /> : <MdOutlineSettings size={29} />}
+                        </Link>
                     </Tooltip>
 
                     <div className='hidden sm:block'>
