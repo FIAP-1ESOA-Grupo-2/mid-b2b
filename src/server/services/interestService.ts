@@ -43,6 +43,9 @@ export const setUserInterests = async (userId: number, interestId: number | numb
     }
 
 }
+export const deleteUserInterests = async (userId: number) => {
+    await prisma.userInterest.deleteMany({ where: { userId } })
+}
 
 export const deleteInterest = async (id: number) => {
     await prisma.interest.delete({ where: { id } })

@@ -2,7 +2,7 @@
 
 import { User } from "@/types/Auth"
 import { Interest } from "@/types/Interest";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { MdSearch } from "react-icons/md"
 import {
     Dialog,
@@ -14,11 +14,9 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { IoIosAdd } from "react-icons/io";
-import { Spinner, useToast } from "@chakra-ui/react";
+import { Skeleton, Spinner, useToast } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa";
-import { useAppSelector } from "@/hooks/useApp";
-import { createInterest } from "@/server/services/interestService";
-import { revalidatePath } from "next/cache";
+import { createInterest, deleteUserInterests, getInterests, getUserInterests, setUserInterests } from "@/server/services/interestService";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -32,16 +30,23 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
     const [searchQueryFocused, setSearchQueryFocused] = useState(false)
     const [interestsFiltered, setInterestsFiltered] = useState<Interest[]>(interests)
     const [interestsSelected, setInterestsSelected] = useState<number[]>(userInterests.map((item) => item.id))
+    const [interestsUserSelected, setInterestsUserSelected] = useState<number[]>(userInterests.map((item) => item.id))
     const [newInterest, setNewInterest] = useState('')
     const [dialogOpen, setDialogOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [btnVisible, setBtnVisible] = useState(false)
+    const [interestsUpdated, setInterestsUpdated] = useState(false)
 
     const toast = useToast()
     const router = useRouter()
-    const { leftSidebarOpenDesktop, deviceWidth } = useAppSelector(state => state.app)
 
-    const handleGetInterests = () => {
-        router.refresh();
+    const handleGetInterests = async () => {
+        setLoading(true)
+
+        const interests = await getInterests()
+        setInterestsFiltered(interests)
+
+        setLoading(false)
     }
 
     const handleOnSubmit = async (e: FormEvent) => {
@@ -122,9 +127,28 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
         }
     }
 
-    const handleUpdateUserInterests = () => {
+    const handleUpdateUserInterests = async () => {
+        setLoading(true)
 
+        await deleteUserInterests(user.id)
+        await setUserInterests(user.id, interestsSelected)
+
+        toast({
+            title: 'Interesses atualizados com sucesso!',
+            description: 'Eles serão visíveis para todos os usuários!',
+            status: 'success',
+            position: 'top-right',
+            duration: 3000,
+            isClosable: true
+        })
+
+        setLoading(false)
+        setInterestsUserSelected(interestsSelected)
     }
+
+    useEffect(() => {
+        setBtnVisible(!loading && JSON.stringify(interestsUserSelected) !== JSON.stringify(interestsSelected) && interestsSelected.length >= 3)
+    }, [interestsSelected, loading, interestsUserSelected])
 
     return (
         <>
@@ -135,7 +159,7 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
                 </p>
             </div>
 
-            <div className="px-4 lg:px-8">
+            <div className="px-4 lg:px-8 flex flex-col relative">
                 <div className="flex gap-2.5 items-center bg-formbg py-2.5 md:py-3 px-5 mt-5 rounded-lg border border-slate-200">
                     <MdSearch size={26} className={`duration-300 ${searchQueryFocused ? 'text-mainblue' : 'text-slate-600'}`} />
 
@@ -150,7 +174,6 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
                         onBlur={() => setSearchQueryFocused(false)}
                         placeholder="Procurar interesses..." />
                 </div>
-
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
@@ -191,44 +214,30 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
                         {interestsSelected.length >= 3 && `${interestsSelected.length} interesses selecionados`}
                     </p>
 
-                    {loading &&
-                        <div className="h-72 flex items-center justify-center">
-                            <Spinner color='blue.500' size='lg' thickness='3px' />
-                        </div>
-                    }
-
-                    {!loading &&
-                        <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 mb-10">
-                            {interestsFiltered.map((item) => (
-                                <li
-                                    key={item.id}
+                    <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 mb-10">
+                        {interestsFiltered.map((item) => (
+                            <li key={item.id}>
+                                <Skeleton
+                                    isLoaded={!loading}
                                     onClick={() => handleToggleInterestSelected(item.id)}
+                                    style={{ borderRadius: 5 }}
                                     className={`select-none px-3 py-2 transition  text-md rounded-lg flex items-center text-textgrey cursor-pointer  max-w-fit ${interestsSelected.includes(item.id) ? "bg-[#007AB5]" : "bg-formbg"}`}
                                 >
                                     <FaPlus color={interestsSelected.includes(item.id) ? "white" : "#00ACFF"} className="mr-3" />
                                     <span className={`text-forminput  ${interestsSelected.includes(item.id) && "text-white"}`}>{item.title}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    }
+                                </Skeleton>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="absolute left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                    <button
+                        onClick={btnVisible ? handleUpdateUserInterests : () => null}
+                        className={`${btnVisible ? 'bottom-20 px-5 sm:bottom-8' : '-bottom-20'}  max-[430px]:w-60 max-[490px]:w-80 w-96  bg-emerald-600 fixed  pointer-events-auto text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500 hover:shadow-2xl duration-300 ease-in-out md:w-full max-w-screen-sm outline-none`}
+                    >Salvar interesses</button>
                 </div>
             </div>
-
-            {!leftSidebarOpenDesktop || deviceWidth < 1024 ?
-                <div className={`${interestsSelected.length >= 3 ? 'bottom-24 sm:bottom-7' : '-bottom-52'} fixed md:max-w-[750px] w-full px-8 -translate-x-2/4 left-2/4 mx-auto duration-500 `}>
-                    <button
-                        onClick={interestsSelected.length >= 3 ? handleUpdateUserInterests : () => null}
-                        className="bg-emerald-600  text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500  hover:scale-110 duration-300 ease-in-out w-full"
-                    >Salvar interesses</button>
-                </div>
-                :
-                <div className={`${interestsSelected.length >= 3 ? 'bottom-24 sm:bottom-7' : '-bottom-52'} fixed left-2/4  w-96 mx-auto duration-500 `}>
-                    <button
-                        onClick={interestsSelected.length >= 3 ? handleUpdateUserInterests : () => null}
-                        className="bg-emerald-600  text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500  hover:scale-110 duration-300 ease-in-out w-full"
-                    >Salvar interesses</button>
-                </div>
-            }
         </>
     )
 }
