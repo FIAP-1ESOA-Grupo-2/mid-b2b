@@ -40,7 +40,7 @@ export const DashboardLayout = ({ user, children }: Props) => {
         window.addEventListener("resize", updateDimensions);
         return () => window.removeEventListener("resize", updateDimensions);
     }, [])
-
+    
     return (
         <>
             <div className="flex flex-col bg-[#F2F3F5] h-screen w-screen">
