@@ -1,8 +1,13 @@
 "use server"
 
 import { PrismaClient } from '@prisma/client'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
-const prisma = new PrismaClient()
+var prisma = new PrismaClient().$extends(withAccelerate())
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    // @ts-ignore
+    prisma = new PrismaClient()
+}
 
 export const getInterests = async () => {
     const interests = await prisma.interest.findMany({ select: { id: true, title: true } })

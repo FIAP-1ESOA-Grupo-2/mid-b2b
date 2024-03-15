@@ -2,8 +2,13 @@
 
 import { SettingTypes, SettingValueTypes } from '@/types/Setting'
 import { PrismaClient } from '@prisma/client'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
-const prisma = new PrismaClient()
+var prisma = new PrismaClient().$extends(withAccelerate())
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    // @ts-ignore
+    prisma = new PrismaClient()
+}
 
 export const getSettings = async (userId: number) => {
     const settings = await prisma.userSetting.findMany({ where: { userId }, select: { id: true, setting: true, value: true } })
