@@ -7,12 +7,6 @@ import bcrypt from 'bcrypt';
 import { setSetting } from './settingService';
 import { withAccelerate } from '@prisma/extension-accelerate'
 
-var prisma = new PrismaClient().$extends(withAccelerate())
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    // @ts-ignore
-    prisma = new PrismaClient()
-}
-
 export const createUser = async (
     name: string,
     email: string,
@@ -23,11 +17,20 @@ export const createUser = async (
     accountType: "buyer" | "seller",
     phoneNumber?: string,
 ) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     if (await prisma.user.findUnique({ where: { email } })) {
+        // Disconnect prisma client
+        prisma.$disconnect()
+
         return { error: 'Email já está sendo usado.', errorCode: 'EMAIL_ALREADY_IN_USE' }
     };
 
     if (await prisma.user.findUnique({ where: { cpf } })) {
+        // Disconnect prisma client
+        prisma.$disconnect()
+
         return { error: 'CPF já está sendo usado.', errorCode: 'CPF_ALREADY_IN_USE' }
     };
 
@@ -38,6 +41,9 @@ export const createUser = async (
         select: { id: true }
     })
 
+    // Disconnect prisma client
+    prisma.$disconnect()
+
     // Preset settings
     await setSetting(newUser.id, 'notify_scheduled_meetings_email', 'true')
     await setSetting(newUser.id, 'notify_scheduled_meetings_web', 'true')
@@ -47,6 +53,9 @@ export const createUser = async (
 }
 
 export const checkUser = async (email_or_cpf: string, password: string): Promise<User | null> => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const user = await prisma.user.findFirst({
         where: {
             OR: [
@@ -55,6 +64,9 @@ export const checkUser = async (email_or_cpf: string, password: string): Promise
             ]
         }
     })
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 
     if (user && await bcrypt.compare(password, user.password)) {
         return {
@@ -74,10 +86,19 @@ export const checkUser = async (email_or_cpf: string, password: string): Promise
 }
 
 export const deleteUser = async (id: number) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     await prisma.user.delete({ where: { id } })
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 }
 
 export const sendEmailVerification = async (email: string) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const token = `${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`
 
     if (await prisma.emailVerification.findUnique({ where: { email } })) {
@@ -85,6 +106,9 @@ export const sendEmailVerification = async (email: string) => {
     } else {
         await prisma.emailVerification.create({ data: { email, token } })
     }
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 
     await mailConfig.sendMail({
         from: '"Mid B2B" <renatoalmeida727261@gmail.com>',
@@ -96,10 +120,17 @@ export const sendEmailVerification = async (email: string) => {
 }
 
 export const checkEmailVerification = async (email: string, token: string) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const emailVerification = await prisma.emailVerification.findUnique({ where: { email, token } })
 
     if (emailVerification) {
         await prisma.emailVerification.delete({ where: { email } })
+
+        // Disconnect prisma client
+        prisma.$disconnect()
+
         return true
     }
 
@@ -107,6 +138,9 @@ export const checkEmailVerification = async (email: string, token: string) => {
 }
 
 export const sendEmailForgotPassword = async (email_or_cpf: string) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const user = await prisma.user.findFirst({
         where: {
             OR: [
@@ -117,7 +151,12 @@ export const sendEmailForgotPassword = async (email_or_cpf: string) => {
         select: { email: true }
     })
 
-    if (!user) return
+    if (!user) {
+        // Disconnect prisma client
+        prisma.$disconnect()
+
+        return;
+    }
 
     const token = `${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`
 
@@ -126,6 +165,9 @@ export const sendEmailForgotPassword = async (email_or_cpf: string) => {
     } else {
         await prisma.passwordReset.create({ data: { email: user.email, token } })
     }
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 
     await mailConfig.sendMail({
         from: '"Mid B2B" <renatoalmeida727261@gmail.com>',
@@ -139,20 +181,36 @@ export const sendEmailForgotPassword = async (email_or_cpf: string) => {
 }
 
 export const checkPasswordReset = async (email: string, token: string) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const passwordReset = await prisma.passwordReset.findUnique({ where: { email, token } })
 
     if (passwordReset) {
         await prisma.passwordReset.delete({ where: { email } })
+
+        // Disconnect prisma client
+        prisma.$disconnect()
+
         return true
     }
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 
     return false
 }
 
 export const updatePassword = async (email: string, password: string) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = await prisma.user.update({ where: { email }, data: { password: hashedPassword } })
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 
     return {
         data: {
@@ -178,12 +236,23 @@ export const updateUser = async (id: number, data: {
     role?: string,
     accountType?: UserAccountType
 }) => {
+    // Connect prisma client
+    const prisma = new PrismaClient()
+
     const user = await prisma.user.findUnique({ where: { id } })
 
-    if (!user) return { error: 'Conta não encontrada', errorCode: 'ACCOUNT_NOT_FOUND' };
+    if (!user) {
+        // Disconnect prisma client
+        prisma.$disconnect()
+
+        return { error: 'Conta não encontrada', errorCode: 'ACCOUNT_NOT_FOUND' };
+    }
 
     if (data.cpf !== user.cpf) {
         if (await prisma.user.findUnique({ where: { cpf: data.cpf } })) {
+            // Disconnect prisma client
+            prisma.$disconnect()
+            
             return { error: 'CPF já está sendo usado.', errorCode: 'CPF_ALREADY_IN_USE' }
         }
     }
@@ -202,6 +271,9 @@ export const updateUser = async (id: number, data: {
             accountType: data.accountType ?? user.accountType
         }
     })
+
+    // Disconnect prisma client
+    prisma.$disconnect()
 
     const updatedData = {
         id: updatedUser.id,
