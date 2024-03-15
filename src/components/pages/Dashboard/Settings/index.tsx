@@ -39,11 +39,6 @@ export const DashboardSettingsPage = () => {
             colorScheme: 'blue'
         },
         {
-            name: 'Minha conta',
-            href: '/dashboard/profile',
-            colorScheme: 'blue'
-        },
-        {
             name: 'Termos e condições',
             href: '/dashboard/settings/terms',
             colorScheme: 'blue'
