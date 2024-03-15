@@ -34,17 +34,11 @@ export const createInterest = async (title: string) => {
 }
 
 export const setUserInterests = async (userId: number, interestId: number | number[]) => {
-    if (Array.isArray(interestId)) {
-        interestId.map((id) => setUserInterests(userId, id))
-    } else {
-        if (await prisma.userInterest.findFirst({ where: { userId, interestId } })) return
-
-        await prisma.userInterest.create({ data: { userId, interestId } })
-    }
-
+    await prisma.userInterest.createMany({ skipDuplicates: true, data: Array.isArray(interestId) ? interestId.map((id) => ({ userId, interestId: id })) : { userId, interestId } })
 }
 export const deleteUserInterests = async (userId: number) => {
     await prisma.userInterest.deleteMany({ where: { userId } })
+
 }
 
 export const deleteInterest = async (id: number) => {
