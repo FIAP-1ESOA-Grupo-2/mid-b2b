@@ -5,8 +5,13 @@ import { User, UserAccountType } from '@/types/Auth';
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt';
 import { setSetting } from './settingService';
+import { withAccelerate } from '@prisma/extension-accelerate'
 
-const prisma = new PrismaClient()
+var prisma = new PrismaClient().$extends(withAccelerate())
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    // @ts-ignore
+    prisma = new PrismaClient()
+}
 
 export const createUser = async (
     name: string,
