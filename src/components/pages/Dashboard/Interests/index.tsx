@@ -1,7 +1,6 @@
 "use client";
 
 import { User } from "@/types/Auth"
-import { Interest } from "@/types/Interest";
 import { FormEvent, useEffect, useState } from "react";
 import { MdSearch } from "react-icons/md"
 import {
@@ -14,36 +13,42 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { IoIosAdd } from "react-icons/io";
-import { Skeleton, useToast } from "@chakra-ui/react";
+import { Progress, Skeleton, useToast } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa";
-import { createInterest, deleteUserInterests, getInterests, setUserInterests } from "@/server/services/interestService";
+import { createInterest, deleteUserInterests, getInterests, getUserInterests, setUserInterests } from "@/server/services/interestService";
+import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
+import { setBtnVisible, setInitLoaded, setInterests, setInterestsFiltered, setInterestsSelected, setInterestsUserSelected } from "@/redux/reducers/interestsReducer";
 
 type Props = {
-    user: User,
-    interests: Interest[],
-    userInterests: Interest[],
+    user: User
 }
 
-export const DashboardInterestsPage = ({ user, interests, userInterests }: Props) => {
+export const DashboardInterestsPage = ({ user }: Props) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchQueryFocused, setSearchQueryFocused] = useState(false)
-    const [interestsFiltered, setInterestsFiltered] = useState<Interest[]>(interests)
-    const [interestsSelected, setInterestsSelected] = useState<number[]>(userInterests.map((item) => item.id))
-    const [interestsUserSelected, setInterestsUserSelected] = useState<number[]>(userInterests.map((item) => item.id))
     const [newInterest, setNewInterest] = useState('')
     const [dialogOpen, setDialogOpen] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [btnVisible, setBtnVisible] = useState(false)
+    const [loading, setLoading] = useState(true)
+
+    const { interests, interestsSelected, initLoaded, interestsUserSelected, interestsFiltered, btnVisible } = useAppSelector(state => state.interests)
 
     const toast = useToast()
+    const dispatch = useAppDispatch()
 
     const handleGetInterests = async () => {
         setLoading(true)
-
-        const interests = await getInterests()
-        setInterestsFiltered(interests)
-
+        const [interestsData, userInterests] = await Promise.all([
+            getInterests(),
+            getUserInterests(user.id)
+        ])
         setLoading(false)
+
+        dispatch(setInterests(interestsData))
+        dispatch(setInterestsUserSelected(userInterests.map((item) => item.id)))
+
+        if (interestsSelected.length === 0) dispatch(setInterestsSelected(userInterests.map((item) => item.id)))
+
+        if (!searchQuery) dispatch(setInterestsFiltered(interestsData))
     }
 
     const handleOnSubmit = async (e: FormEvent) => {
@@ -74,8 +79,8 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
 
         if (newInterestResponse.action == 'interest_exists') {
             toast({
-                title: 'Este interesse já existe',
-                description: 'Adicionamos ele automaticamente no seu perfil!',
+                title: 'Este interesse já existe e foi adicionado automaticamente',
+                description: 'Clique em salvar para atualizar seus interesses!',
                 status: 'info',
                 position: 'top-right',
                 duration: 3000,
@@ -84,13 +89,13 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
         }
 
         if (!interestsSelected.includes(newInterestResponse.data.id)) {
-            setInterestsSelected([...interestsSelected, newInterestResponse.data.id])
+            dispatch(setInterestsSelected([...interestsSelected, newInterestResponse.data.id]))
         }
 
         if (newInterestResponse.action == 'interest_created') {
             toast({
                 title: 'Interesse adicionado com sucesso!',
-                description: 'Adicionamos ele automaticamente no seu perfil!',
+                description: 'Clique em salvar para atualizar seus interesses!',
                 status: 'success',
                 position: 'top-right',
                 duration: 3000,
@@ -109,18 +114,18 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
     const handleSearch = (query: string) => {
         setSearchQuery(query)
 
-        const interestsFiltered = interests.filter((item) =>
+        const interestsFilteredData = interests.filter((item) =>
             item.title.toLowerCase().includes(query.toLowerCase())
         )
 
-        setInterestsFiltered(interestsFiltered)
+        dispatch(setInterestsFiltered(interestsFilteredData))
     }
 
     const handleToggleInterestSelected = (id: number) => {
         if (interestsSelected.includes(id)) {
-            setInterestsSelected(interestsSelected.filter((item) => item !== id))
+            dispatch(setInterestsSelected(interestsSelected.filter((item) => item !== id)))
         } else {
-            setInterestsSelected([...interestsSelected, id])
+            dispatch(setInterestsSelected([...interestsSelected, id]))
         }
     }
 
@@ -129,6 +134,7 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
 
         await deleteUserInterests(user.id)
         await setUserInterests(user.id, interestsSelected)
+        dispatch(setInterestsUserSelected(interestsSelected))
 
         toast({
             title: 'Interesses atualizados com sucesso!',
@@ -140,12 +146,21 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
         })
 
         setLoading(false)
-        setInterestsUserSelected(interestsSelected)
+        dispatch(setBtnVisible(false))
     }
 
     useEffect(() => {
-        setBtnVisible(!loading && JSON.stringify(interestsUserSelected) !== JSON.stringify(interestsSelected) && interestsSelected.length >= 3)
-    }, [interestsSelected, loading, interestsUserSelected])
+        if (!initLoaded) {
+            handleGetInterests();
+            dispatch(setInitLoaded(true));
+        } else {
+            if (interests.length >= 1) setLoading(false)
+        }
+    }, [initLoaded])
+
+    useEffect(() => {
+        dispatch(setBtnVisible(interestsSelected.length >= 3 && JSON.stringify(interestsSelected.toSorted()) !== JSON.stringify(interestsUserSelected.toSorted())))
+    }, [interestsSelected, interestsUserSelected])
 
     return (
         <>
@@ -155,6 +170,10 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
                     Escolha seus interesses ou adicione novos, e eles serão visíveis para todos os usuários!
                 </p>
             </div>
+
+            {loading &&
+                <Progress size='xs' isIndeterminate />
+            }
 
             <div className="px-4 lg:px-8 flex flex-col relative">
                 <div className="flex gap-2.5 items-center bg-formbg py-2.5 md:py-3 px-5 mt-5 rounded-lg border border-slate-200">
@@ -174,10 +193,12 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
-                        <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md my-4 outline-none shadow-md hover:shadow-lg fo:bg-mainbluehover duration-300" >
-                            <IoIosAdd size={30} />
-                            <h3 className="py-2 md:py-2.5 font-semibold">Adicionar novo interesse</h3>
-                        </button>
+                        <Skeleton isLoaded={!loading} className="my-4" style={{ borderRadius: 5 }}>
+                            <button className="flex items-center bg-mainblue rounded-md w-full justify-center text-formbg text-md  outline-none shadow-md hover:shadow-lg fo:bg-mainbluehover duration-300" >
+                                <IoIosAdd size={30} />
+                                <h3 className="py-2 md:py-2.5 font-semibold">Adicionar novo interesse</h3>
+                            </button>
+                        </Skeleton>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
@@ -221,7 +242,7 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
                                     className={`select-none px-3 py-2 transition  text-md rounded-lg flex items-center text-textgrey cursor-pointer  max-w-fit ${interestsSelected.includes(item.id) ? "bg-[#007AB5]" : "bg-formbg"}`}
                                 >
                                     <FaPlus color={interestsSelected.includes(item.id) ? "white" : "#00ACFF"} className="mr-3" />
-                                    <span className={`text-forminput  ${interestsSelected.includes(item.id) && "text-white"}`}>{item.title}</span>
+                                    <span className={`text-forminput ${interestsSelected.includes(item.id) && "text-white"}`}>{item.title}</span>
                                 </Skeleton>
                             </li>
                         ))}
@@ -230,8 +251,8 @@ export const DashboardInterestsPage = ({ user, interests, userInterests }: Props
 
                 <div className="absolute left-0 w-full h-full flex items-center justify-center pointer-events-none">
                     <button
-                        onClick={btnVisible ? handleUpdateUserInterests : () => null}
-                        className={`${btnVisible ? 'bottom-20 px-5 sm:bottom-8' : '-bottom-20'}  max-[430px]:w-60 max-[490px]:w-80 w-96  bg-emerald-600 fixed  pointer-events-auto text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500 hover:shadow-2xl duration-300 ease-in-out md:w-full max-w-screen-sm outline-none`}
+                        onClick={btnVisible && !loading ? handleUpdateUserInterests : () => null}
+                        className={`${btnVisible && !loading ? 'bottom-20 px-5 sm:bottom-8' : '-bottom-20'}  max-[430px]:w-60 max-[490px]:w-80 w-96  bg-emerald-600 fixed  pointer-events-auto text-gray-50 py-3 font-semibold rounded-lg shadow-xl hover:bg-emerald-500 hover:shadow-2xl duration-300 ease-in-out md:w-full max-w-screen-sm outline-none`}
                     >Salvar interesses</button>
                 </div>
             </div>

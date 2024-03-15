@@ -7,11 +7,11 @@ export const metadata = {
 } satisfies Metadata
 
 const DashboardSettings = async () => {
-    const user = await isAuthenticated()
+    await isAuthenticated()
 
     return (
         <main>
-            <DashboardSettingsPage user={user} />
+            <DashboardSettingsPage />
         </main>
     )
 }

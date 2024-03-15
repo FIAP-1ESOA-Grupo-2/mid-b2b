@@ -6,12 +6,7 @@ import { useToast } from '@chakra-ui/react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-type Props = {
-    user: User
-}
-
-
-export const DashboardSettingsPage = ({ user }: Props) => {
+export const DashboardSettingsPage = () => {
     const toast = useToast()
 
     const handleSignOut = async () => {
