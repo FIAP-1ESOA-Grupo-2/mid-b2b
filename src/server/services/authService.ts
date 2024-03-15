@@ -4,6 +4,7 @@ import { mailConfig } from '@/config/mail';
 import { User, UserAccountType } from '@/types/Auth';
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt';
+import { setSetting } from './settingService';
 
 const prisma = new PrismaClient()
 
@@ -31,6 +32,11 @@ export const createUser = async (
         data: { name, email, cpf, sector, role, accountType, password: hashedPassword, phoneNumber },
         select: { id: true }
     })
+
+    // Preset settings
+    await setSetting(newUser.id, 'notify_scheduled_meetings_email', 'true')
+    await setSetting(newUser.id, 'notify_scheduled_meetings_web', 'true')
+    await setSetting(newUser.id, 'unread_notification_indicator', 'true')
 
     return { data: newUser }
 }

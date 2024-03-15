@@ -93,7 +93,6 @@ export const Interesses = () => {
             await setUserInterests(newUser.data.id, signUp.interestsSelected)
             await signIn("credentials", { email_or_cpf: data.email, password: data.password, redirect: false })
 
-
             toast({
                 title: 'Conta criada com sucesso!',
                 description: 'Agora você pode iniciar a jornada de negócios',
@@ -103,10 +102,10 @@ export const Interesses = () => {
                 isClosable: true
             })
 
+            await router.push('/dashboard')
+
             dispatch(setLoading({ title: '', isLoading: false }))
             dispatch(resetSignUp())
-
-            router.push('/dashboard')
         }
     }
 
@@ -254,7 +253,7 @@ export const Interesses = () => {
                             <li
                                 key={item.id}
                                 onClick={() => handleToggleInterestSelected(item.id)}
-                                className={`select-none px-3 py-2 transition bg-formbg text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit ${signUp.interestsSelected.includes(item.id) && "bg-[#007AB5]"}`}
+                                className={`select-none px-3 py-2 transition  text-lg rounded-lg flex items-center text-textgrey cursor-pointer max-w-fit ${signUp.interestsSelected.includes(item.id) ? "bg-[#007AB5]" : "bg-formbg"}`}
                             >
                                 <FaPlus color={signUp.interestsSelected.includes(item.id) ? "white" : "#00ACFF"} className="mr-3" />
                                 <span className={`text-forminput  ${signUp.interestsSelected.includes(item.id) && "text-white"}`}>{item.title}</span>

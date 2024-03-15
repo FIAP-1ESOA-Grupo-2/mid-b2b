@@ -1,6 +1,5 @@
 import { DashboardInterestsPage } from "@/components/pages/Dashboard/Interests"
 import { isAuthenticated } from "@/middlewares/isAuth"
-import { getInterests, getUserInterests } from "@/server/services/interestService"
 import { Metadata } from "next"
 
 export const metadata = {
@@ -9,15 +8,12 @@ export const metadata = {
 
 
 const DashboardInterests = async () => {
-    const [user, interests] = await Promise.all([isAuthenticated(), getInterests()])
-    const userInterests = await getUserInterests(user.id)
+    const user = await isAuthenticated()
 
     return (
         <main className="bg-white rounded-xl border shadow-sm border-slate-200  pb-5">
             <DashboardInterestsPage
                 user={user}
-                interests={interests}
-                userInterests={userInterests}
             />
         </main>
     )
