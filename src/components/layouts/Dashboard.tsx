@@ -18,6 +18,7 @@ import LogoImg from '@/assets/images/logo.svg'
 import Image from "next/image";
 import { MdMenu } from "react-icons/md";
 import Link from "next/link";
+import { DrawerNotifications } from "../Dashboard/DrawerNotifications";
 
 type Props = {
     user: User,
@@ -40,7 +41,7 @@ export const DashboardLayout = ({ user, children }: Props) => {
         window.addEventListener("resize", updateDimensions);
         return () => window.removeEventListener("resize", updateDimensions);
     }, [])
-    
+
     return (
         <>
             <div className="flex flex-col bg-[#F2F3F5] h-screen w-screen">
@@ -79,6 +80,10 @@ export const DashboardLayout = ({ user, children }: Props) => {
                     <DashboardHeader mode="mobile" />
                 </div>
             </div>
+
+            <DrawerNotifications
+                user={user}
+            />
 
             {app.deviceWidth < 1024 &&
                 <Drawer

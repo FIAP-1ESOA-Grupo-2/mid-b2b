@@ -124,9 +124,9 @@ export const DashboardLeftSide = ({ user }: Props) => {
                 </Link>
                 <Link
                     href={'/dashboard/settings'}
-                    className={`flex gap-2 items-center cursor-pointer p-1 transition-all hover:text-mainblue ${pathname == '/dashboard/settings' ? 'text-mainblue' : 'text-zinc-500'}`}
+                    className={`flex gap-2 items-center cursor-pointer p-1 transition-all hover:text-mainblue ${pathname.startsWith('/dashboard/settings') ? 'text-mainblue' : 'text-zinc-500'}`}
                 >
-                    {pathname == '/dashboard/settings' ? <MdSettings className="text-mainblue" size={27} /> : <MdOutlineSettings size={27} />}
+                    {pathname.startsWith('/dashboard/settings') ? <MdSettings className="text-mainblue" size={27} /> : <MdOutlineSettings size={27} />}
                     <span className="font-semibold text-sm text-inherit mt-0.5">Configurações</span>
                 </Link>
                 <button

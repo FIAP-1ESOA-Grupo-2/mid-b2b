@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import signUpReducer from './reducers/signUpReducer'
 import appReducer from './reducers/appReducer'
 import interestsReducer from './reducers/interestsReducer'
+import notificationsReducer from './reducers/notificationsReducer'
 
 export const store = configureStore({
     reducer: {
         signUp: signUpReducer,
         app: appReducer,
-        interests: interestsReducer
+        interests: interestsReducer,
+        notifications: notificationsReducer
     }
 })
 

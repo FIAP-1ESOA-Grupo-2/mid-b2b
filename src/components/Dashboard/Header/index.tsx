@@ -18,6 +18,7 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { Tooltip } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
 import { setLeftSidebarDesktopToggle, setLeftSidebarMobileToggle } from '@/redux/reducers/appReducer';
+import { setDrawerOpen } from '@/redux/reducers/notificationsReducer';
 
 type Props = {
     mode: "mobile" | "desktop"
@@ -25,6 +26,8 @@ type Props = {
 
 export const DashboardHeader = ({ mode }: Props) => {
     const { leftSidebarOpenDesktop, deviceWidth } = useAppSelector((state) => state.app)
+    const { drawerOpen: drawerNotificationsOpen } = useAppSelector((state) => state.notifications)
+
     const dispatch = useAppDispatch()
 
     const pathname = usePathname()
@@ -35,6 +38,10 @@ export const DashboardHeader = ({ mode }: Props) => {
         } else {
             dispatch(setLeftSidebarDesktopToggle())
         }
+    }
+
+    const handleToggleDrawerNotifications = () => {
+        dispatch(setDrawerOpen(!drawerNotificationsOpen))
     }
 
     return (
@@ -55,24 +62,27 @@ export const DashboardHeader = ({ mode }: Props) => {
                     <Tooltip label='Início' openDelay={700}>
                         <Link
                             href='/dashboard'
-                            className={`${pathname === '/dashboard' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                            className={`${pathname === '/dashboard' && !drawerNotificationsOpen ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
                         >
-                            {pathname === '/dashboard' ? <MdHome size={31} /> : <MdOutlineHome size={31} />}
+                            {pathname === '/dashboard' && !drawerNotificationsOpen ? <MdHome size={31} /> : <MdOutlineHome size={31} />}
                         </Link>
                     </Tooltip>
 
-                    <Tooltip label='Notificações' openDelay={700}>
-                        <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
-                            <MdNotificationsNone size={30} />
+                    <Tooltip label='Notificações' openDelay={600}>
+                        <button
+                            onClick={handleToggleDrawerNotifications}
+                            className={`${drawerNotificationsOpen ? 'text-mainblue' : 'text-gray-600'} outline-none hover:text-mainbluehover transition-all`}
+                        >
+                            {drawerNotificationsOpen ? <MdNotifications size={30} /> : <MdNotificationsNone size={30} />}
                         </button>
                     </Tooltip>
 
                     <Tooltip label='Meu perfil' openDelay={700}>
                         <Link
                             href='/dashboard/profile'
-                            className={`${pathname === '/dashboard/profile' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                            className={`${pathname === '/dashboard/profile' && !drawerNotificationsOpen ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
                         >
-                            {pathname === '/dashboard/profile' ? <BiSolidUser size={28} /> : <BiUser size={28} />}
+                            {pathname === '/dashboard/profile' && !drawerNotificationsOpen ? <BiSolidUser size={28} /> : <BiUser size={28} />}
                         </Link>
                     </Tooltip>
 
@@ -85,9 +95,9 @@ export const DashboardHeader = ({ mode }: Props) => {
                     <Tooltip label='Configurações' openDelay={700}>
                         <Link
                             href='/dashboard/settings'
-                            className={`${pathname === '/dashboard/settings' ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                            className={`${pathname.startsWith('/dashboard/settings') && !drawerNotificationsOpen ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
                         >
-                            {pathname === '/dashboard/settings' ? <MdSettings size={29} /> : <MdOutlineSettings size={29} />}
+                            {pathname.startsWith('/dashboard/settings') && !drawerNotificationsOpen ? <MdSettings size={29} /> : <MdOutlineSettings size={29} />}
                         </Link>
                     </Tooltip>
 
