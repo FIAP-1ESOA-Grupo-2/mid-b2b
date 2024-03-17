@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Calendar } from '@natscale/react-calendar';
 import './styles.css';
 import { Value } from '@natscale/react-calendar/dist/utils/types';
+import dayjs from 'dayjs';
 
 export const LeftSideCalendar = () => {
     const [value, setValue] = useState(new Date());
