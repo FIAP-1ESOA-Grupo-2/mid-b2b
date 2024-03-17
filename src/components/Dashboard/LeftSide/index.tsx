@@ -86,10 +86,13 @@ export const DashboardLeftSide = ({ user }: Props) => {
                     <Image src={Icon1} alt="icon" />
                     <span className="font-semibold text-sm text-inherit ">Encontre o melhor negócio</span>
                 </div>
-                <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
+                <Link
+                    href='/dashboard/meetings/schedule'
+                    className={`${pathname == '/dashboard/meetings/schedule' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}
+                >
                     <Image src={Icon2} alt="icon" />
                     <span className="font-semibold text-sm text-inherit">Encontros agendados</span>
-                </div>
+                </Link>
                 <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
                     <Image src={Icon3} alt="icon" />
                     <span className="font-semibold text-sm text-inherit">Encontros recentes</span>

@@ -3,6 +3,7 @@
 import Icon1 from '@/assets/images/dashboard-leftside-icon-1.svg';
 import Icon2 from '@/assets/images/dashboard-leftside-icon-2.svg';
 import Image from "next/image";
+import Link from 'next/link';
 
 export const FindDeals = () => {
     return (
@@ -14,7 +15,8 @@ export const FindDeals = () => {
                     <p className='text-base mb-3'>Faça negócios hoje mesmo</p>
                 </div>
                 <div>
-                    <button className='px-9 py-3 bg-mainblue text-base text-white font-bold rounded-xl'>Encontrar</button>
+                    <Link
+                        href='/dashboard/meetings/schedule' className='block px-9 py-3 bg-mainblue text-base text-white font-bold rounded-xl w-fit'>Encontrar</Link>
                 </div>
             </section>
             <section className="flex flex-col justify-between bg-white py-8 px-10 rounded-xl border shadow-sm border-slate-200 flex-1">
@@ -24,7 +26,9 @@ export const FindDeals = () => {
                     <p className='text-base mb-3'>Gerencie seus encontros</p>
                 </div>
                 <div>
-                    <button className='px-9 py-3 bg-mainblue text-base text-white font-bold rounded-xl'>Minha agenda</button>
+                    <Link
+                        href='/dashboard/meetings/schedule'
+                        className='px-9 py-3 bg-mainblue text-base text-white font-bold rounded-xl block w-fit'>Minha agenda</Link>
                 </div>
             </section>
         </section>
