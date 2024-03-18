@@ -5,9 +5,11 @@ import { useChannel } from "ably/react";
 
 const SignUp = () => {
     const { channel, ably } = useChannel("get-started", (message) => {
-        channel.subscribe("message-1", (message) => {
-            console.log("Message received: " + message.data)
-        });
+       
+    });
+
+    channel.subscribe("message-1", (message) => {
+        console.log("Message received: " + message.data)
     });
 
     return (
