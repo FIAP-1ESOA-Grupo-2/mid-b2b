@@ -1,10 +1,14 @@
 "use client";
 
 import RegisterSteps from "@/components/Auth/SignUp/TelaCadastro";
-import { io } from "socket.io-client";
+import { useChannel } from "ably/react";
 
 const SignUp = () => {
-    var socket = io(process.env.BACKEND_BASE_URL as string);
+    const { channel, ably } = useChannel("get-started", (message) => {
+        channel.subscribe("message-1", (message) => {
+            console.log("Message received: " + message.data)
+        });
+    });
 
     return (
         <div className="flex items-center ">
