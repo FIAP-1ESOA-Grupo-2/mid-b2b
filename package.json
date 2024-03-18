@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "node": "node server.js"
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
@@ -24,6 +25,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@types/bcrypt": "^5.0.2",
     "@types/nodemailer": "^6.4.14",
+    "@types/socket.io": "^3.0.2",
     "antd": "^5.15.3",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
@@ -41,6 +43,8 @@
     "react-icons": "^5.0.1",
     "react-redux": "^9.1.0",
     "redux": "^5.0.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"

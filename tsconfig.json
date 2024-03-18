@@ -33,7 +33,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/config/auth.ts"
-  ],
+, "server.js"  ],
   "exclude": [
     "node_modules"
   ]
