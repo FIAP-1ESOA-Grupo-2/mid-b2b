@@ -82,10 +82,13 @@ export const DashboardLeftSide = ({ user }: Props) => {
             </div>
 
             <div className="flex flex-col gap-3 px-6 py-5 bg-white rounded-xl border shadow-sm border-slate-200">
-                <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
+                <Link
+                    href='/dashboard/meetings/suggestions'
+                    className={`${pathname == '/dashboard/meetings/suggestions' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}
+                >
                     <Image src={Icon1} alt="icon" />
-                    <span className="font-semibold text-sm text-inherit ">Encontre o melhor negócio</span>
-                </div>
+                    <span className="font-semibold text-sm text-inherit">Encontre o melhor negócio</span>
+                </Link> 
                 <Link
                     href='/dashboard/meetings/schedule'
                     className={`${pathname == '/dashboard/meetings/schedule' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}

@@ -4,21 +4,14 @@ import { Avatar } from "@chakra-ui/react";
 import { MdOutlineSearch } from "react-icons/md";
 import { IoFilterOutline } from "react-icons/io5";
 import { User } from "@/types/Auth";
-import { useChannel } from "ably/react";
 
 type Props = {
     user: User
 }
 
 export const Greetings = ({ user }: Props) => {
-    const { channel, ably } = useChannel("get-started");
-
     return (
         <section className="bg-white py-8 px-10 rounded-xl border shadow-sm border-slate-200">
-            <button onClick={() => channel.publish("message-1", { data: "Hello!" })}>
-                Enviar
-            </button>
-
             <section className="w-full flex items-center justify-between gap-3">
                 <div className="w-full">
                     <div className="flex items-center justify-between ">
