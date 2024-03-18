@@ -32,7 +32,7 @@ export const DrawerNotifications = ({ user }: Props) => {
                     <DrawerCloseButton />
                     <DrawerHeader>Notificações</DrawerHeader>
 
-                    <DrawerBody style={{ overflowY: 'auto', overflowX: 'hidden', padding: '0 16px' }}>
+                    <DrawerBody style={{ padding: '2px 0px' }}>
 
                     </DrawerBody>
                 </DrawerContent>
