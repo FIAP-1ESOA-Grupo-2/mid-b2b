@@ -22,12 +22,7 @@ export const Providers = ({ children }: Props) => {
         ablyClient.connection.once("connected", () => {
             console.log("Connected to Ably!")
         })
-
-        const channel = ablyClient.channels.get("get-started")
-
-        channel.publish("message-1", "Enviando uma mensagem para o signUP!")
     }, [])
-
 
     return (
         <AblyProvider client={ablyClient}>
