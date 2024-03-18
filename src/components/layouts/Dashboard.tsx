@@ -19,6 +19,8 @@ import Image from "next/image";
 import { MdMenu } from "react-icons/md";
 import Link from "next/link";
 import { DrawerNotifications } from "../Dashboard/DrawerNotifications";
+import { generateMeetings } from "@/server/services/meetingService";
+import { setInitLoaded, setLoading, setMeetingSuggestions } from "@/redux/reducers/meetingSuggestionsReducer";
 
 type Props = {
     user: User,
@@ -27,10 +29,22 @@ type Props = {
 
 export const DashboardLayout = ({ user, children }: Props) => {
     const app = useAppSelector((state) => state.app)
+    const { meetingSuggestions, initLoaded } = useAppSelector(state => state.meetingSuggestions)
+
     const dispatch = useAppDispatch()
 
     const handleToggleLeftSideMobile = () => dispatch(setLeftSidebarMobileToggle())
     const handleSetDeviceWidth = (width: number) => dispatch(setDeviceWidth(width))
+
+    const handleGetMeetingsSuggestions = async () => {
+        if (initLoaded) return;
+
+        const response = await generateMeetings(user.id, user.accountType)
+        console.log(response)
+        dispatch(setMeetingSuggestions(response))
+        dispatch(setInitLoaded(true))
+        dispatch(setLoading(false))
+    }
 
     useEffect(() => {
         // Set width initially
@@ -41,6 +55,8 @@ export const DashboardLayout = ({ user, children }: Props) => {
         window.addEventListener("resize", updateDimensions);
         return () => window.removeEventListener("resize", updateDimensions);
     }, [])
+
+    useEffect(() => { handleGetMeetingsSuggestions() }, [])
 
     return (
         <>

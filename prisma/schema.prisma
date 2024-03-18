@@ -68,6 +68,19 @@ model Interest {
   @@map("interests")
 }
 
+model MeetingSuggestion {
+  id                 Int      @id @default(autoincrement())
+  interests          String   @db.Text
+  matchups           Int
+  from_user_id       Int
+  to_user_id         Int
+  from_user_accepted Boolean  @default(false)
+  to_user_accepted   Boolean  @default(false)
+  createdAt          DateTime @default(now())
+
+  @@map("meeting_suggestions")
+}
+
 model UserInterest {
   id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userId], references: [id])

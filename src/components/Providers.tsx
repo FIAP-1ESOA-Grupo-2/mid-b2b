@@ -8,7 +8,6 @@ import { Next13ProgressBar } from 'next13-progressbar';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Ably from 'ably';
 import { AblyProvider } from 'ably/react';
-import { useEffect } from "react";
 
 type Props = {
     children: React.ReactNode
@@ -17,12 +16,6 @@ type Props = {
 
 export const Providers = ({ children }: Props) => {
     const ablyClient = new Ably.Realtime.Promise(process.env.NEXT_PUBLIC_ABLY_API_KEY as string)
-
-    useEffect(() => {
-        ablyClient.connection.once("connected", () => {
-            console.log("Connected to Ably!")
-        })
-    }, [])
 
     return (
         <AblyProvider client={ablyClient}>
