@@ -1,10 +1,12 @@
 "use client";
 
-import { useAppSelector } from '@/hooks/useApp';
-import { generateMeetings } from '@/server/services/meetingService';
+import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
 import { User } from '@/types/Auth';
-import { Progress, Spinner } from '@chakra-ui/react';
+import { Progress, Spinner, useToast } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
+import { SuggestionCard } from './SuggestionCard';
+import { useChannel } from 'ably/react';
+import Link from 'next/link';
 
 type Props = {
     user: User
@@ -13,9 +15,43 @@ type Props = {
 export const DashboardMeetingsSuggestionsPage = ({ user }: Props) => {
     const { meetingSuggestions, initLoaded, loading } = useAppSelector(state => state.meetingSuggestions)
 
-    useEffect(() => {
-        generateMeetings(user.id, user.accountType)
-    }, [])
+    const toast = useToast()
+    const dispatch = useAppDispatch()
+
+    // Realtime update meetings suggestions
+    const { channel } = useChannel('meetings-suggestions', `meeting-suggestion-update-per-${user.id}`, async (message) => {
+        if (message.data.action === 'rejected') {
+            toast({
+                title: 'Uma sugestão foi recusada...',
+                description: 'Seu parceiro recusou uma sugestão',
+                status: 'info',
+                position: 'top-right',
+                duration: 4000,
+                isClosable: true,
+            })
+        }
+
+        if (message.data.action === 'new_meeting') {
+            toast({
+                render: () => (
+                    <div className='bg-white p-4 shadow-md rounded-lg border-2 border-mainblue px-6'>
+                        <p className="text-slate-600 font-bold">Um novo <span className="text-mainblue">encontro</span> foi criado!</p>
+                        <p className='text-sm'>Ambas as partes aceitaram a sugestão...</p>
+
+                        <Link
+                            href={`/dashboard/meetings/${message.data.id}`}
+                            className="bg-mainblue mt-4 block text-center hover:bg-mainbluehover text-white font-semibold shadow-md py-1 rounded-md w-full transition-all"
+                        >
+                            Ver encontro
+                        </Link>
+                    </div>
+                ),
+                position: 'top-right',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    });
 
     return (
         <div className="bg-white rounded-xl border shadow-sm border-slate-200">
@@ -28,7 +64,7 @@ export const DashboardMeetingsSuggestionsPage = ({ user }: Props) => {
 
             {loading && <Progress size='xs' isIndeterminate />}
 
-            <div className='py-2  px-4 lg:px-8'>
+            <div className='py-6 px-4 lg:px-8'>
                 {loading &&
                     <div className='h-96 flex flex-col gap-4 items-center justify-center'>
                         <Spinner
@@ -44,6 +80,20 @@ export const DashboardMeetingsSuggestionsPage = ({ user }: Props) => {
                     </div>
                 }
 
+                {!loading &&
+                    <div>
+                        {meetingSuggestions.map((meeting, key) => {
+                            return (
+                                <div className={key + 1 === meetingSuggestions.length ? '' : 'mb-6'} key={meeting.id}>
+                                    <SuggestionCard
+                                        user={user}
+                                        data={meeting}
+                                    />
+                                </div>
+                            )
+                        })}
+                    </div>
+                }
             </div>
         </div>
     );

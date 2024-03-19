@@ -19,8 +19,10 @@ import Image from "next/image";
 import { MdMenu } from "react-icons/md";
 import Link from "next/link";
 import { DrawerNotifications } from "../Dashboard/DrawerNotifications";
-import { generateMeetings } from "@/server/services/meetingService";
+import { generateMeetings, getMeetingSuggestion } from "@/server/services/meetingService";
 import { setInitLoaded, setLoading, setMeetingSuggestions } from "@/redux/reducers/meetingSuggestionsReducer";
+import { useChannel } from 'ably/react';
+import moment from "moment";
 
 type Props = {
     user: User,
@@ -40,11 +42,25 @@ export const DashboardLayout = ({ user, children }: Props) => {
         if (initLoaded) return;
 
         const response = await generateMeetings(user.id, user.accountType)
-        console.log(response)
+
         dispatch(setMeetingSuggestions(response))
         dispatch(setInitLoaded(true))
         dispatch(setLoading(false))
     }
+
+    // Realtime update meetings suggestions
+    const { channel } = useChannel('meetings-suggestions', `meeting-suggestion-update-per-${user.id}`, async (message) => {
+        if (message.data.action === 'rejected' || message.data.action === 'new_meeting') {
+            dispatch(setMeetingSuggestions(meetingSuggestions.filter((data) => data.id !== message.data.id)))
+            return;
+        }
+
+        const meetingSuggestionUpdated = await getMeetingSuggestion(message.data.id)
+        const meetingSuggestionsUpdated = meetingSuggestions.map((data) => data.id === message.data.id ? { ...meetingSuggestionUpdated, createdAt: moment(meetingSuggestionUpdated?.createdAt).calendar() } : data)
+
+        // @ts-ignore
+        dispatch(setMeetingSuggestions(meetingSuggestionsUpdated))
+    });
 
     useEffect(() => {
         // Set width initially
@@ -79,7 +95,7 @@ export const DashboardLayout = ({ user, children }: Props) => {
                 </div>
 
                 <div className="overflow-hidden sm:overflow-auto flex-1 sm:scroll-pt-4">
-                    <div className="p-5 xl:p-0 sm:py-5 xl:py-5 sm:max-w-screen-xl mx-auto">
+                    <div className="flex-1 p-4 w-full h-full overflow-auto sm:h-auto sm:overflow-hidden scroll-pt-4 sm:p-0 sm:py-4 sm:px-4 xl:px-2 sm:max-w-screen-xl sm:mx-auto">
                         <div className={`hidden ${app.leftSidebarOpenDesktop ? 'ml-0' : '-ml-[400px] opacity-0 pointer-events-none'} duration-500  lg:block fixed pr-1.5 overflow-y-hidden hover:overflow-y-scroll overflow-x-hidden h-[calc(100vh-84px)] z-10`}>
                             <DashboardLeftSide
                                 user={user}

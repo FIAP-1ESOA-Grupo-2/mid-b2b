@@ -68,6 +68,20 @@ model Interest {
   @@map("interests")
 }
 
+model Meeting {
+  id           Int       @id @default(autoincrement())
+  interests    String    @db.Text
+  matchups     Int
+  from_user_id Int
+  to_user_id   Int
+  local        String?
+  date         DateTime?
+  closed       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+
+  @@map("meetings")
+}
+
 model MeetingSuggestion {
   id                 Int      @id @default(autoincrement())
   interests          String   @db.Text
@@ -76,6 +90,7 @@ model MeetingSuggestion {
   to_user_id         Int
   from_user_accepted Boolean  @default(false)
   to_user_accepted   Boolean  @default(false)
+  refused            Boolean  @default(false)
   createdAt          DateTime @default(now())
 
   @@map("meeting_suggestions")
