@@ -79,14 +79,14 @@ export const DashboardLayout = ({ user, children }: Props) => {
                 </div>
 
                 <div className="overflow-hidden sm:overflow-auto flex-1 sm:scroll-pt-4">
-                    <div className="flex-1 p-4 w-full h-full overflow-auto sm:h-auto sm:overflow-hidden scroll-pt-4 sm:p-0 sm:py-4 sm:px-4 xl:px-2 sm:max-w-screen-xl sm:mx-auto">
+                    <div className="p-5 xl:p-0 sm:py-5 xl:py-5 sm:max-w-screen-xl mx-auto">
                         <div className={`hidden ${app.leftSidebarOpenDesktop ? 'ml-0' : '-ml-[400px] opacity-0 pointer-events-none'} duration-500  lg:block fixed pr-1.5 overflow-y-hidden hover:overflow-y-scroll overflow-x-hidden h-[calc(100vh-84px)] z-10`}>
                             <DashboardLeftSide
                                 user={user}
                             />
                         </div>
 
-                        <div className={`${app.leftSidebarOpenDesktop ? 'lg:ml-80' : 'lg:ml-0'} lg:duration-500`}>
+                        <div className={`${app.leftSidebarOpenDesktop ? 'lg:ml-[19rem]' : 'lg:ml-0'} lg:duration-500`}>
                             {children}
                         </div>
                     </div>
