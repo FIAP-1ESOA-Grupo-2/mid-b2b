@@ -2,7 +2,7 @@ import { Popconfirm, Tag } from 'antd';
 import { MeetingSuggestion } from "@/types/Meeting";
 import { User } from "@/types/Auth";
 import { useToast } from "@chakra-ui/react";
-import { acceptMeetingSuggestion, rejectMeetingSuggestion } from "@/server/services/meetingService";
+import { acceptMeetingSuggestion, rejectMeetingSuggestion } from "@/server/meetingSuggestionService";
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { setMeetingSuggestions } from "@/redux/reducers/meetingSuggestionsReducer";
 import { useChannel } from 'ably/react'
@@ -50,7 +50,7 @@ export const SuggestionCard = ({ data, user }: Props) => {
 
         if (response.action === 'new_meeting') {
             dispatch(setMeetingSuggestions(meetingSuggestions.filter((item) => item.id !== data.id)))
-            
+
             toast({
                 render: () => (
                     <div className='bg-white p-4 shadow-md rounded-lg border-2 border-mainblue px-6'>
@@ -58,10 +58,10 @@ export const SuggestionCard = ({ data, user }: Props) => {
                         <p className='text-sm'>Ambas as partes aceitaram a sugestão...</p>
 
                         <Link
-                            href={`/dashboard/meetings/${data.id}`}
+                            href={`/dashboard/meetings/in-progress`}
                             className="bg-mainblue mt-4 block text-center hover:bg-mainbluehover text-white font-semibold shadow-md py-1 rounded-md w-full transition-all"
                         >
-                            Ver encontro
+                            Ver meus encontros
                         </Link>
                     </div>
                 ),

@@ -12,7 +12,7 @@ import Link from "next/link";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { ProfileGoogle } from "@/types/Auth";
-import { hasAccountProvider } from "@/server/services/authProvidersService";
+import { hasAccountProvider } from "@/server/authProvidersService";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const SignIn = () => {

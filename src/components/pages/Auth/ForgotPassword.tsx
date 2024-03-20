@@ -8,7 +8,7 @@ import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next13-progressbar';
 import { SubmitHandler, useForm } from "react-hook-form";
-import { checkPasswordReset, sendEmailForgotPassword, updatePassword } from "@/server/services/authService";
+import { checkPasswordReset, sendEmailForgotPassword, updatePassword } from "@/server/authService";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const ForgotPassword = () => {

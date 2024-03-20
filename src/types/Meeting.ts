@@ -1,3 +1,20 @@
+export type Meeting = {
+    id: number,
+    interests: string,
+    matchups: number,
+    from_user_id: number,
+    to_user_id: number,
+    date?: Date | null | string,
+    local?: string | null,
+    closed: boolean
+}
+
+export type MeetingState = {
+    meetings: Meeting[]
+    loading: boolean
+    initLoaded: boolean
+}
+
 export type MeetingSuggestion = {
     id: number,
     from_user_id: number,

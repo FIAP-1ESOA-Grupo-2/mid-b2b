@@ -16,7 +16,7 @@ export const FindDeals = () => {
                 </div>
                 <div>
                     <Link
-                        href='/dashboard/meetings/schedule' className='block px-9 py-3 bg-mainblue text-base text-white font-bold rounded-xl w-fit'>Encontrar</Link>
+                        href='/dashboard/meetings/suggestions' className='block px-9 py-3 bg-mainblue text-base text-white font-bold rounded-xl w-fit'>Encontrar</Link>
                 </div>
             </section>
             <section className="flex flex-col justify-between bg-white py-8 px-10 rounded-xl border shadow-sm border-slate-200 flex-1">

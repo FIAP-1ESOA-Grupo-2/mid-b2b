@@ -4,7 +4,7 @@ import { Progress, Switch, useToast } from '@chakra-ui/react'
 import { User } from "@/types/Auth";
 import { ChangeEvent, useEffect, useState } from 'react';
 import { SettingTypes } from '@/types/Setting';
-import { getSettings, setSetting } from '@/server/services/settingService';
+import { getSettings, setSetting } from '@/server/settingService';
 import Link from 'next/link';
 import { HiArrowSmLeft } from 'react-icons/hi';
 

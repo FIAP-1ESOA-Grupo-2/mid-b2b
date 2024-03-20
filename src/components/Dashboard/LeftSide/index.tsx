@@ -88,7 +88,14 @@ export const DashboardLeftSide = ({ user }: Props) => {
                 >
                     <Image src={Icon1} alt="icon" />
                     <span className="font-semibold text-sm text-inherit">Encontre o melhor negócio</span>
-                </Link> 
+                </Link>
+                <Link
+                    href='/dashboard/meetings/in-progress'
+                    className={`${pathname == '/dashboard/meetings/in-progress' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}
+                >
+                    <Image src={Icon3} alt="icon" />
+                    <span className="font-semibold text-sm text-inherit">Encontros em andamento</span>
+                </Link>
                 <Link
                     href='/dashboard/meetings/schedule'
                     className={`${pathname == '/dashboard/meetings/schedule' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}
@@ -96,10 +103,6 @@ export const DashboardLeftSide = ({ user }: Props) => {
                     <Image src={Icon2} alt="icon" />
                     <span className="font-semibold text-sm text-inherit">Encontros agendados</span>
                 </Link>
-                <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
-                    <Image src={Icon3} alt="icon" />
-                    <span className="font-semibold text-sm text-inherit">Encontros recentes</span>
-                </div>
                 <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
                     <Image src={Icon4} alt="icon" />
                     <span className="font-semibold text-sm text-inherit">Descobrir novos locais</span>

@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { signUpSchema } from "@/lib/validators/userValidator";
 import { goToNextStep, goToStep, setData, setLoading, setProvider } from "@/redux/reducers/signUpReducer";
-import { hasAccountProvider } from "@/server/services/authProvidersService";
-import { sendEmailVerification } from "@/server/services/authService";
+import { hasAccountProvider } from "@/server/authProvidersService";
+import { sendEmailVerification } from "@/server/authService";
 import { ProfileGoogle } from "@/types/Auth";
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";

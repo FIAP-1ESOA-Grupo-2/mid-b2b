@@ -15,10 +15,10 @@ import { Label } from "@/components/ui/label"
 import { Spinner, useToast } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { Interest } from "@/types/Interest";
-import { createInterest, getInterests, setUserInterests } from "@/server/services/interestService";
+import { createInterest, getInterests, setUserInterests } from "@/server/interestService";
 import { goToStep, resetSignUp, setData, setInterests, setInterestsSelected, setLoading } from "@/redux/reducers/signUpReducer";
-import { createUser } from "@/server/services/authService";
-import { createAccountProvider } from "@/server/services/authProvidersService";
+import { createUser } from "@/server/authService";
+import { createAccountProvider } from "@/server/authProvidersService";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next13-progressbar";
 
