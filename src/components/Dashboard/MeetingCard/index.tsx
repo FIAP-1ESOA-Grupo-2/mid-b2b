@@ -2,6 +2,7 @@ import { Meeting } from "@/types/Meeting";
 import { User } from "@/types/Auth";
 import { MdOutlineDateRange } from "react-icons/md";
 import { MdOutlineLocalLibrary } from "react-icons/md";
+import Link from "next/link";
 
 type Props = {
     data: Meeting,
@@ -19,11 +20,11 @@ export const MeetingCard = ({ data, user }: Props) => {
                 <div className='flex items-center gap-3 flex-wrap'>
                     <div className='flex items-center gap-2 mt-1 mb-0.5 bg-slate-100 border border-slate-300 py-[1px] px-2 rounded-sm text-slate-600'>
                         <MdOutlineDateRange size={15} />
-                        <div className='text-[12px] mt-[2px] font-bold flex-1'>A combinar</div>
+                        <div className='text-[12px] mt-[2px] font-bold flex-1'>{data.date ? data.date.toString() : 'A combinar'}</div>
                     </div>
                     <div className='flex items-center gap-2 mt-1 mb-0.5 bg-slate-100 border border-slate-300 py-[1px] px-2 rounded-sm text-slate-600'>
                         <MdOutlineLocalLibrary size={15} />
-                        <div className='text-[12px] mt-[2px] font-bold flex-1'>A combinar</div>
+                        <div className='text-[12px] mt-[2px] font-bold flex-1'>{data.local ? data.local : 'A combinar'}</div>
                     </div>
                 </div>
 
@@ -34,11 +35,12 @@ export const MeetingCard = ({ data, user }: Props) => {
 
             <div className="flex flex-col gap-6 w-full sm:w-auto">
                 <div className="flex flex-col md:flex-row gap-4">
-                    <button
+                    <Link
+                        href={`/dashboard/meetings/${data.id}`}
                         className="bg-mainblue hover:bg-mainbluehover text-white font-bold shadow-md py-2 px-10 rounded-md w-full transition-all order-1 md:order-2"
                     >
                         Ver detalhes
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div >
