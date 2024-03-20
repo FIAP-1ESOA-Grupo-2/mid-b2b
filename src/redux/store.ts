@@ -4,6 +4,7 @@ import appReducer from './reducers/appReducer'
 import interestsReducer from './reducers/interestsReducer'
 import notificationsReducer from './reducers/notificationsReducer'
 import meetingSuggestionsReducer from './reducers/meetingSuggestionsReducer'
+import meetingsReducer from './reducers/meetingsReducer'
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         app: appReducer,
         interests: interestsReducer,
         notifications: notificationsReducer,
-        meetingSuggestions: meetingSuggestionsReducer
+        meetingSuggestions: meetingSuggestionsReducer,
+        meetings: meetingsReducer
     }
 })
 

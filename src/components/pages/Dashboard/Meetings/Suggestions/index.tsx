@@ -39,10 +39,10 @@ export const DashboardMeetingsSuggestionsPage = ({ user }: Props) => {
                         <p className='text-sm'>Ambas as partes aceitaram a sugestão...</p>
 
                         <Link
-                            href={`/dashboard/meetings/${message.data.id}`}
+                            href={`/dashboard/meetings/in-progress`}
                             className="bg-mainblue mt-4 block text-center hover:bg-mainbluehover text-white font-semibold shadow-md py-1 rounded-md w-full transition-all"
                         >
-                            Ver encontro
+                            Ver meus encontros
                         </Link>
                     </div>
                 ),

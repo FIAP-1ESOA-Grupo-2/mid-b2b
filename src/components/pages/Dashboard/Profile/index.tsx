@@ -9,7 +9,7 @@ import { updateUserSchema } from "@/lib/validators/userValidator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Skeleton, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { updateUser } from "@/server/services/authService";
+import { updateUser } from "@/server/authService";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next13-progressbar";
 

@@ -1,4 +1,4 @@
-import { checkUser } from "@/server/services/authService"
+import { checkUser } from "@/server/authService"
 import { User, UserSession } from "@/types/Auth"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"

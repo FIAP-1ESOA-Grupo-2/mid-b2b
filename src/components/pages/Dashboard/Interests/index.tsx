@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label"
 import { IoIosAdd } from "react-icons/io";
 import { Progress, Skeleton, useToast } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa";
-import { createInterest, deleteUserInterests, getInterests, getUserInterests, setUserInterests } from "@/server/services/interestService";
+import { createInterest, deleteUserInterests, getInterests, getUserInterests, setUserInterests } from "@/server/interestService";
 import { useAppDispatch, useAppSelector } from "@/hooks/useApp";
 import { setBtnVisible, setInitLoaded, setInterests, setInterestsFiltered, setInterestsSelected, setInterestsUserSelected } from "@/redux/reducers/interestsReducer";
 
