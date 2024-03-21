@@ -97,16 +97,19 @@ export const DashboardLeftSide = ({ user }: Props) => {
                     <span className="font-semibold text-sm text-inherit">Encontros em andamento</span>
                 </Link>
                 <Link
+                    href='/dashboard/meetings/closed'
+                    className={`${pathname == '/dashboard/meetings/closed' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}
+                >
+                    <Image src={Icon4} alt="icon" />
+                    <span className="font-semibold text-sm text-inherit">Encontros encerrados</span>
+                </Link>
+                <Link
                     href='/dashboard/meetings/schedule'
                     className={`${pathname == '/dashboard/meetings/schedule' ? 'text-mainblue' : 'text-zinc-600'} flex gap-3 items-center cursor-pointer p-1 transition-all hover:text-mainblue`}
                 >
                     <Image src={Icon2} alt="icon" />
                     <span className="font-semibold text-sm text-inherit">Encontros agendados</span>
                 </Link>
-                <div className="flex gap-3 items-center cursor-pointer p-1 transition-all text-zinc-600 hover:text-mainblue">
-                    <Image src={Icon4} alt="icon" />
-                    <span className="font-semibold text-sm text-inherit">Descobrir novos locais</span>
-                </div>
             </div>
 
             <div className="flex flex-col gap-3 px-6 py-5 bg-white rounded-xl border shadow-sm border-slate-200">

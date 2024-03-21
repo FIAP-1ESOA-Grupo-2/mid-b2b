@@ -4,7 +4,6 @@ import { getMeeting } from "@/server/meetingService"
 import { Button, Result } from "antd"
 import Link from "next/link"
 
-
 const DashboardMeeting = async ({ params }: { params: { meeting_id: string } }) => {
     const user = await isAuthenticated()
     const meeting = await getMeeting(params.meeting_id, user.id)

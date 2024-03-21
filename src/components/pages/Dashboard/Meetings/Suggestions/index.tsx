@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { SuggestionCard } from './SuggestionCard';
 import { useChannel } from 'ably/react';
 import Link from 'next/link';
+import { Empty } from 'antd';
 
 type Props = {
     user: User
@@ -92,6 +93,12 @@ export const DashboardMeetingsSuggestionsPage = ({ user }: Props) => {
                                 </div>
                             )
                         })}
+
+                        {meetingSuggestions.length === 0 &&
+                            <div className='h-96 flex items-center justify-center'>
+                                <Empty description="Nenhuma sugestão encontrada" />
+                            </div>
+                        }
                     </div>
                 }
             </div>

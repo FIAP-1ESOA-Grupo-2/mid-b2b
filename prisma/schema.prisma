@@ -76,7 +76,7 @@ model Meeting {
   from_user_id Int
   to_user_id   Int
   local        String?
-  date         DateTime?
+  date         String?
   closed       Boolean          @default(false)
   createdAt    DateTime         @default(now())
   chat         MeetingMessage[]
@@ -91,6 +91,7 @@ model MeetingMessage {
   user      User    @relation(fields: [userId], references: [id])
   userId    Int
   body      String  @db.Text
+  type      String  @default("text")
   createdAt String
 
   @@map("meeting_messages")
