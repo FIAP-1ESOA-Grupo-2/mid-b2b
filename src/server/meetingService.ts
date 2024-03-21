@@ -1,6 +1,8 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
+import moment from 'moment';
+import 'moment/locale/pt-br'
 
 const prisma = new PrismaClient()
 
@@ -37,4 +39,14 @@ export const getMeeting = async (id: string, userId: number) => {
     if (!meeting) return { error: 'meeting_not_found' }
 
     return { data: meeting }
+}
+
+export const getMeetingMessages = async (meetingId: number) => {
+    const messages = await prisma.meetingMessage.findMany({ where: { meetingId }, select: { id: true, body: true, userId: true, createdAt: true } })
+    return messages
+}
+
+export const sendMessage = async (meetingId: number, userId: number, body: string) => {
+    const message = await prisma.meetingMessage.create({ data: { meetingId, userId, body, createdAt: moment().unix().toString() } })
+    return message
 }

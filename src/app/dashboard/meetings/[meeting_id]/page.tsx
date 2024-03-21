@@ -22,7 +22,6 @@ const DashboardMeeting = async ({ params }: { params: { meeting_id: string } }) 
         )
     }
 
-
     return (
         <main>
             <DashboardMeetingPage
