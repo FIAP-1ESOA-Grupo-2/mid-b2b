@@ -31,3 +31,10 @@ export type MeetingSuggestionState = {
     loading: boolean
     initLoaded: boolean
 }
+
+export type MeetingMessage = {
+    id: number,
+    userId: number,
+    body: string,
+    createdAt: number | string
+}
