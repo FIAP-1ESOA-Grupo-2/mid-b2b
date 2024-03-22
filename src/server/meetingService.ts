@@ -16,16 +16,6 @@ export const getMeetings = async (userId: number) => {
                 { from_user_id: userId },
                 { to_user_id: userId }
             ]
-        },
-        select: {
-            id: true,
-            from_user_id: true,
-            to_user_id: true,
-            date: true,
-            interests: true,
-            matchups: true,
-            closed: true,
-            local: true
         }
     })
 
@@ -40,16 +30,6 @@ export const getMeetingsClosed = async (userId: number) => {
                 { to_user_id: userId }
             ],
             closed: true
-        },
-        select: {
-            id: true,
-            from_user_id: true,
-            to_user_id: true,
-            date: true,
-            interests: true,
-            matchups: true,
-            closed: true,
-            local: true
         }
     })
 

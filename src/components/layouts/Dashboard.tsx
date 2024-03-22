@@ -60,7 +60,7 @@ export const DashboardLayout = ({ user, children }: Props) => {
 
         if (message.data.action === 'new_meeting') {
             dispatch(setLoadingMeetings(true))
-            dispatch(setMeetings(await getMeetings(user.id) as Meeting[]))
+            dispatch(setMeetings(await getMeetings(user.id)))
             dispatch(setLoadingMeetings(false))
             return;
         }
