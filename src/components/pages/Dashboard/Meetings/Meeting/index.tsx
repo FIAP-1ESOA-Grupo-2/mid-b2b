@@ -14,11 +14,12 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import moment from 'moment';
 import 'moment/locale/pt-br'
-import { Calendar, Modal, Popconfirm } from 'antd';
+import { Calendar, Modal, Popconfirm, Rate } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs'
 import { FcLock } from "react-icons/fc";
 import { useRouter } from 'next/navigation';
+import { createFeedback } from '@/server/userFeedbackService';
 type Props = {
     user: User,
     meeting: Meeting
@@ -39,6 +40,7 @@ export const DashboardMeetingPage = ({ user, meeting }: Props) => {
     const [meetingLocalInput, setMeetingLocalInput] = useState(meeting.local ?? '')
     const [meetingLocal, setMeetingLocal] = useState(meeting.local)
     const [meetingClosed, setMeetingClosed] = useState(meeting.closed)
+    const [meetingRated, setMeetingRated] = useState((meeting.from_user_id == user.id && meeting.from_user_rated) || (meeting.to_user_id == user.id && meeting.to_user_rated))
 
     const toUserID = meeting.from_user_id == user.id ? meeting.to_user_id : meeting.from_user_id
 
@@ -181,6 +183,38 @@ export const DashboardMeetingPage = ({ user, meeting }: Props) => {
         channel.publish(`user-online-${toUserID}`, {})
     }
 
+    const handleOnChangeRate = async (value: number) => {
+        toast({
+            title: 'Avaliando parceiro...',
+            description: 'Por favor aguarde',
+            status: 'loading',
+            position: 'top-right',
+            duration: 10 * 1000,
+            id: 'new-rate-loading',
+        })
+
+        await createFeedback(toUserID, value)
+
+        if (meeting.from_user_id == user.id) {
+            await updateMeeting(meeting.id, { from_user_rated: true })
+        } else {
+            await updateMeeting(meeting.id, { to_user_rated: true })
+        }
+        setMeetingRated(true)
+
+        toast.close('new-rate-loading')
+        toast({
+            title: 'Parceiro avaliado!',
+            description: 'Parceiro avaliado com sucesso',
+            status: 'success',
+            position: 'top-right',
+            duration: 3000,
+            isClosable: true,
+        })
+
+        router.refresh()
+    }
+
     // Realtime update for user online on meeting chat
     channel.subscribe(`user-online-${user.id}`, () => {
         setUserOnline(true)
@@ -301,6 +335,15 @@ export const DashboardMeetingPage = ({ user, meeting }: Props) => {
                 {loading && <Progress size='xs' isIndeterminate className='rounded-b-xl' />}
             </div>
 
+
+            {meetingClosed && !meetingRated ?
+                <div className='bg-white rounded-xl border shadow-sm border-slate-200 flex items-center gap-4 py-5 px-4 lg:px-8'>
+                    <span className='text-slate-500 font-bold'>Avalie seu parceiro:</span>
+
+                    <Rate onChange={handleOnChangeRate} allowHalf />
+                </div>
+                : ''}
+
             <div className='bg-white rounded-xl border shadow-sm border-slate-200'>
                 <div className='flex justify-between border-b border-slate-200 py-5 px-4 lg:px-8'>
                     <div className='flex gap-4 items-center'>
@@ -378,12 +421,14 @@ export const DashboardMeetingPage = ({ user, meeting }: Props) => {
                                 className="outline-none w-full   pr-1.5 text-md py-2 flex-1 placeholder:text-neutral-400 placeholder:font-normal font-semibold  text-slate-500 duration-200"
                             />
 
+                            {/*}
                             <button
                                 type="button"
                                 className="bg-transparent hover:bg-slate-100 text-mainblue   py-1.5 px-2.5 mr-2 rounded-md transition-all"
                             >
                                 <MdAttachFile size={24} />
                             </button>
+                */}
 
                             <button
                                 type="submit"
