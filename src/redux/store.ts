@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import signUpReducer from './reducers/signUpReducer'
 import appReducer from './reducers/appReducer'
 import interestsReducer from './reducers/interestsReducer'
-import notificationsReducer from './reducers/notificationsReducer'
 import meetingSuggestionsReducer from './reducers/meetingSuggestionsReducer'
 import meetingsReducer from './reducers/meetingsReducer'
 
@@ -11,7 +10,6 @@ export const store = configureStore({
         signUp: signUpReducer,
         app: appReducer,
         interests: interestsReducer,
-        notifications: notificationsReducer,
         meetingSuggestions: meetingSuggestionsReducer,
         meetings: meetingsReducer
     }

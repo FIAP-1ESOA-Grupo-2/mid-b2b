@@ -16,16 +16,6 @@ export const getMeetings = async (userId: number) => {
                 { from_user_id: userId },
                 { to_user_id: userId }
             ]
-        },
-        select: {
-            id: true,
-            from_user_id: true,
-            to_user_id: true,
-            date: true,
-            interests: true,
-            matchups: true,
-            closed: true,
-            local: true
         }
     })
 
@@ -40,16 +30,6 @@ export const getMeetingsClosed = async (userId: number) => {
                 { to_user_id: userId }
             ],
             closed: true
-        },
-        select: {
-            id: true,
-            from_user_id: true,
-            to_user_id: true,
-            date: true,
-            interests: true,
-            matchups: true,
-            closed: true,
-            local: true
         }
     })
 
@@ -81,4 +61,17 @@ export const getMeetingMessages = async (meetingId: number) => {
 export const sendMessage = async (meetingId: number, userId: number, body: string, type: MeetingMessage['type'] = 'text') => {
     const message = await prisma.meetingMessage.create({ data: { meetingId, userId, body, createdAt: moment().unix().toString(), type } })
     return message
+}
+
+export const getMeetingsScheduled = async (userId: number, month: number, year: number) => {
+    const meetings = await prisma.meeting.findMany({
+        where:
+        {
+            OR: [{ from_user_id: userId }, { to_user_id: userId }],
+            closed: false,
+            date: { contains: `${year}-${month.toString().padStart(2, '0')}` }
+        }
+    })
+
+    return meetings
 }

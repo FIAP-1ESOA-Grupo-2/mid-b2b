@@ -18,7 +18,6 @@ import LogoImg from '@/assets/images/logo.svg'
 import Image from "next/image";
 import { MdMenu } from "react-icons/md";
 import Link from "next/link";
-import { DrawerNotifications } from "../Dashboard/DrawerNotifications";
 import { generateMeetings, getMeetingSuggestion } from "@/server/meetingSuggestionService";
 import { setInitLoaded, setLoading, setMeetingSuggestions } from "@/redux/reducers/meetingSuggestionsReducer";
 import { setLoading as setLoadingMeetings } from "@/redux/reducers/meetingsReducer";
@@ -26,6 +25,7 @@ import { useChannel } from 'ably/react';
 import moment from "moment";
 import { setMeetings } from "@/redux/reducers/meetingsReducer";
 import { getMeetings } from "@/server/meetingService";
+import { Meeting } from "@/types/Meeting";
 
 type Props = {
     user: User,
@@ -122,10 +122,6 @@ export const DashboardLayout = ({ user, children }: Props) => {
                     <DashboardHeader mode="mobile" />
                 </div>
             </div>
-
-            <DrawerNotifications
-                user={user}
-            />
 
             {app.deviceWidth < 1024 &&
                 <Drawer
