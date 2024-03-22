@@ -4,6 +4,8 @@ export type Meeting = {
     matchups: number,
     from_user_id: number,
     to_user_id: number,
+    from_user_rated: boolean,
+    to_user_rated: boolean,
     date?: Date | null | string,
     local?: string | null,
     closed: boolean
@@ -11,8 +13,11 @@ export type Meeting = {
 
 export type MeetingState = {
     meetings: Meeting[]
+    meetingsClosed: Meeting[]
     loading: boolean
+    loadingClosed: boolean
     initLoaded: boolean
+    initLoadedClosed: boolean
 }
 
 export type MeetingSuggestion = {
@@ -36,5 +41,6 @@ export type MeetingMessage = {
     id: number,
     userId: number,
     body: string,
+    type: 'text' | 'notification',
     createdAt: number | string
 }

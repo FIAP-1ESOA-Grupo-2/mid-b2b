@@ -2,53 +2,52 @@
 
 import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
 import { User } from '@/types/Auth';
-import { Progress, Spinner, useToast } from '@chakra-ui/react';
+import { Progress, Spinner } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useChannel } from 'ably/react';
 import { MeetingCard } from '@/components/Dashboard/MeetingCard';
-import { setInitLoaded, setLoading, setMeetings } from '@/redux/reducers/meetingsReducer';
-import { getMeetings } from '@/server/meetingService';
+import { setInitLoadedClosed, setLoadingClosed, setMeetingsClosed } from '@/redux/reducers/meetingsReducer';
+import { getMeetingsClosed } from '@/server/meetingService';
 import { Empty } from 'antd';
 
 type Props = {
     user: User
 }
 
-export const DashboardMeetingsInProgressPage = ({ user }: Props) => {
-    const { meetings, initLoaded, loading } = useAppSelector(state => state.meetings)
+export const DashboardMeetingsClosedPage = ({ user }: Props) => {
+    const { meetingsClosed, initLoadedClosed, loadingClosed } = useAppSelector(state => state.meetings)
 
-    const toast = useToast()
     const dispatch = useAppDispatch()
 
-    const { channel } = useChannel(`meetings-update-per-${user.id}`, 'update-meetings', () => {
-        handleGetMeetings()
+    const { channel } = useChannel(`meetings-closed-update-per-${user.id}`, 'update-meetings', () => {
+        handleGetMeetingsClosed()
     })
 
-    const handleGetMeetings = async () => {
-        if (!initLoaded) dispatch(setInitLoaded(true))
+    const handleGetMeetingsClosed = async () => {
+        if (!initLoadedClosed) dispatch(setInitLoadedClosed(true))
 
-        dispatch(setLoading(true))
-        dispatch(setMeetings(await getMeetings(user.id)))
-        dispatch(setLoading(false))
+        dispatch(setLoadingClosed(true))
+        dispatch(setMeetingsClosed(await getMeetingsClosed(user.id)))
+        dispatch(setLoadingClosed(false))
     }
 
     useEffect(() => {
-        handleGetMeetings()
+        handleGetMeetingsClosed()
     }, [])
 
     return (
         <div className="bg-white rounded-xl border shadow-sm border-slate-200">
             <div className="border-b border-slate-200 rounded-t-xl pt-5 pb-4 px-4 lg:px-8">
-                <span className="text-xl font-bold text-slate-700">Encontros em andamento</span>
+                <span className="text-xl font-bold text-slate-700">Encontros encerrados</span>
                 <p className="text-sm text-slate-500">
-                    Veja os encontros em andamento, clique para ver os detalhes
+                    Veja os encontros encerrados, clique para ver os detalhes
                 </p>
             </div>
 
-            {loading && <Progress size='xs' isIndeterminate />}
+            {loadingClosed && <Progress size='xs' isIndeterminate />}
 
             <div className='py-6 px-4 lg:px-8'>
-                {loading &&
+                {loadingClosed &&
                     <div className='h-96 flex flex-col gap-4 items-center justify-center'>
                         <Spinner
                             thickness='4px'
@@ -63,11 +62,11 @@ export const DashboardMeetingsInProgressPage = ({ user }: Props) => {
                     </div>
                 }
 
-                {!loading &&
+                {!loadingClosed &&
                     <div>
-                        {meetings.map((meeting, key) => {
+                        {meetingsClosed.map((meeting, key) => {
                             return (
-                                <div className={key + 1 === meetings.length ? '' : 'mb-6'} key={meeting.id}>
+                                <div className={key + 1 === meetingsClosed.length ? '' : 'mb-6'} key={meeting.id}>
                                     <MeetingCard
                                         user={user}
                                         data={meeting}
@@ -76,9 +75,9 @@ export const DashboardMeetingsInProgressPage = ({ user }: Props) => {
                             )
                         })}
 
-                        {meetings.length === 0 &&
+                        {meetingsClosed.length === 0 &&
                             <div className='h-96 flex items-center justify-center'>
-                                <Empty description="Nenhum encontro em andamento" />
+                                <Empty description="Nenhum encontro encerrado" />
                             </div>
                         }
                     </div>

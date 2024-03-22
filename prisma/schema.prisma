@@ -36,6 +36,7 @@ model User {
   UserProvider  UserProvider[]
   UserSetting   UserSetting[]
   MeetingChat   MeetingMessage[]
+  UserFeedback  UserFeedback[]
 
   @@map("users")
 }
@@ -60,6 +61,16 @@ model UserSetting {
   @@map("users_settings")
 }
 
+model UserFeedback {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  amount    Float
+  createdAt DateTime @default(now())
+
+  @@map("users_feedback")
+}
+
 model Interest {
   id           Int            @id @default(autoincrement())
   title        String
@@ -70,16 +81,18 @@ model Interest {
 }
 
 model Meeting {
-  id           Int              @id @default(autoincrement())
-  interests    String           @db.Text
-  matchups     Int
-  from_user_id Int
-  to_user_id   Int
-  local        String?
-  date         DateTime?
-  closed       Boolean          @default(false)
-  createdAt    DateTime         @default(now())
-  chat         MeetingMessage[]
+  id              Int              @id @default(autoincrement())
+  interests       String           @db.Text
+  matchups        Int
+  from_user_id    Int
+  to_user_id      Int
+  from_user_rated Boolean          @default(false)
+  to_user_rated   Boolean          @default(false)
+  local           String?
+  date            String?
+  closed          Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  chat            MeetingMessage[]
 
   @@map("meetings")
 }
@@ -91,6 +104,7 @@ model MeetingMessage {
   user      User    @relation(fields: [userId], references: [id])
   userId    Int
   body      String  @db.Text
+  type      String  @default("text")
   createdAt String
 
   @@map("meeting_messages")
