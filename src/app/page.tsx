@@ -1,14 +1,11 @@
-import Link from "next/link"
+"use client"
+import LandingPage from "@/components/pages/LandingPage"
 
 const HomePage = () => {
 
   return (
     <div>
-      LANDING PAGE 2
-
-      <Link className="bg-teal-400 text-white " href='/dashboard'>
-        Login
-      </Link>
+      <LandingPage />
     </div>
   )
 }
