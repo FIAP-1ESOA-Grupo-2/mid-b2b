@@ -18,7 +18,7 @@ export const FooterLP = () => {
                 <li><FaTwitter /></li>
                 <li><TfiYoutube /></li>
             </ul>
-            <p className="text-gray-500 text-xs">&copy; Copyright 2024 - Linkedin</p>
+            <p className="text-gray-500 text-xs mb-4">&copy; Copyright 2024 - Linkedin</p>
         </section>
     )
 }
