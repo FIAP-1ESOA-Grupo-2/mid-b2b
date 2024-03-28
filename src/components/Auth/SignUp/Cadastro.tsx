@@ -151,7 +151,7 @@ export const Cadastro = () => {
     }, [signUpData.cpf])
 
     return (
-        <section className="mt-6  max-h-screen max-w-screen-md mx-auto">
+        <section className="mt-6 pt-8  max-h-screen max-w-screen-md mx-auto">
             <h1 className="text-3xl font-bold text-center">Preencha seus dados</h1>
             <p className='mb-6 text-center text-slate-700 text-sm'>
                 Preencha os dados abaixo para avançar no processo de cadastro!
@@ -211,7 +211,7 @@ export const Cadastro = () => {
 
                 <div className="-mb-3">
                     <input
-                        placeholder="Cargo atual"
+                        placeholder="Área de atuação"
                         {...register("role", { value: signUpData.role, onChange: e => handleValueChange(e, 'role') })}
                         type="text"
                         className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.role ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}
@@ -240,27 +240,29 @@ export const Cadastro = () => {
                 <button type="submit" className="bg-mainblue text-formbg py-3 text-base rounded-lg shadow-xl hover:bg-mainbluehover duration-100 ease-in-out">Avançar</button>
             </form>
 
-            {!signUpProvider.provider &&
-                <>
-                    <p className="text-center text-forminput my-5 text-base">ou continue com</p>
-                    <div>
-                        <ul className="flex items-center justify-center gap-5 cursor-pointer">
-                            <li>
-                                <GoogleLogin
-                                    onSuccess={handleGoogleLoginSuccess}
-                                    onError={handleGoogleLoginError}
-                                    text="signup_with"
-                                    context="signup"
-                                    shape="circle"
-                                    type="icon"
-                                />
-                            </li>
-                            <li><a href="#"><FaFacebook size={36} color={"#0163E0"} /></a></li>
-                            <li><a href="#"></a><FaApple size={37} /></li>
-                        </ul>
-                    </div>
-                </>
-            }
+            <div className="pb-12">
+                {!signUpProvider.provider &&
+                    <>
+                        <p className="text-center text-forminput my-5 text-base">ou continue com</p>
+                        <div>
+                            <ul className="flex items-center justify-center gap-5 cursor-pointer">
+                                <li>
+                                    <GoogleLogin
+                                        onSuccess={handleGoogleLoginSuccess}
+                                        onError={handleGoogleLoginError}
+                                        text="signup_with"
+                                        context="signup"
+                                        shape="circle"
+                                        type="icon"
+                                    />
+                                </li>
+                                <li><a href="#"><FaFacebook size={36} color={"#0163E0"} /></a></li>
+                                <li><a href="#"></a><FaApple size={37} /></li>
+                            </ul>
+                        </div>
+                    </>
+                }
+            </div>
         </section>
     )
 }

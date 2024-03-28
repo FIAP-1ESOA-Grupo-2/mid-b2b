@@ -248,7 +248,7 @@ export const Interesses = () => {
                 }
 
                 {interestsLoaded &&
-                    <ul className="mx-auto rounded  flex flex-wrap gap-4 py-4 mb-10">
+                    <ul className="mx-auto rounded  flex flex-wrap gap-4 pt-4 pb-8 mb-10">
                         {interestsFiltered.map((item) => (
                             <li
                                 key={item.id}
