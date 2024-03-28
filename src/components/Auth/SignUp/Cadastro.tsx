@@ -211,7 +211,7 @@ export const Cadastro = () => {
 
                 <div className="-mb-3">
                     <input
-                        placeholder="Área de atuação"
+                        placeholder="Cargo atual"
                         {...register("role", { value: signUpData.role, onChange: e => handleValueChange(e, 'role') })}
                         type="text"
                         className={`w-full text-base transition-all border-2  bg-formbg rounded-lg text-forminput py-3 px-4 outline-none  focus:text-zinc-600 ${errors.role ? "border-red-500" : "border-slate-100 focus:border-mainblue"}`}

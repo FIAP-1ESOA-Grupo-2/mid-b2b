@@ -204,7 +204,7 @@ export const DashboardProfilePage = ({ user }: Props) => {
                 </div>
 
                 <div className="flex flex-col gap-0.5">
-                    <Label htmlfor="role" text="Área de atuação:" />
+                    <Label htmlfor="role" text="Cargo atual:" />
                     <Input
                         id="role"
                         placeholder="Ex. Administrativo"
