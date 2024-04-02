@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HiArrowSmLeft } from "react-icons/hi";
+import { Contents } from "./Contents";
 
 export const DashboardSettingsTermsPage = () => {
     return (
@@ -24,41 +25,7 @@ export const DashboardSettingsTermsPage = () => {
                 </section>
 
                 <section className="flex flex-col gap-5 mt-6">
-                    <article>
-                        <h1 className="text-xl text-mainblue">1. Cláusula</h1>
-                        <p className="text-sm text-slate-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Tempore officiis, perferendis deserunt beatae harum exercitationem
-                            minima veniam magni ea itaque architecto rerum soluta officia adipisci
-                            laborum eligendi, repellendus, reprehenderit inventore?</p>
-                    </article>
-                    <article>
-                        <h1 className="text-xl text-mainblue">2. Cláusula</h1>
-                        <p className="text-sm text-slate-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Tempore officiis, perferendis deserunt beatae harum exercitationem
-                            minima veniam magni ea itaque architecto rerum soluta officia adipisci
-                            laborum eligendi, repellendus, reprehenderit inventore?</p>
-                    </article>
-                    <article>
-                        <h1 className="text-xl text-mainblue">3. Cláusula</h1>
-                        <p className="text-sm text-slate-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Tempore officiis, perferendis deserunt beatae harum exercitationem
-                            minima veniam magni ea itaque architecto rerum soluta officia adipisci
-                            laborum eligendi, repellendus, reprehenderit inventore?</p>
-                    </article>
-                    <article>
-                        <h1 className="text-xl text-mainblue">4. Cláusula</h1>
-                        <p className="text-sm text-slate-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Tempore officiis, perferendis deserunt beatae harum exercitationem
-                            minima veniam magni ea itaque architecto rerum soluta officia adipisci
-                            laborum eligendi, repellendus, reprehenderit inventore?</p>
-                    </article>
-                    <article>
-                        <h1 className="text-xl text-mainblue">5. Cláusula</h1>
-                        <p className="text-sm text-slate-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Tempore officiis, perferendis deserunt beatae harum exercitationem
-                            minima veniam magni ea itaque architecto rerum soluta officia adipisci
-                            laborum eligendi, repellendus, reprehenderit inventore?</p>
-                    </article>
+                    <Contents />
                 </section>
             </div>
         </div>
