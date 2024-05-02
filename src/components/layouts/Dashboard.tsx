@@ -25,7 +25,6 @@ import { useChannel } from 'ably/react';
 import moment from "moment";
 import { setMeetings } from "@/redux/reducers/meetingsReducer";
 import { getMeetings } from "@/server/meetingService";
-import { Meeting } from "@/types/Meeting";
 
 type Props = {
     user: User,
