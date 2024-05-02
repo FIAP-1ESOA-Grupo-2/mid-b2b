@@ -72,9 +72,12 @@ export const DashboardHeader = ({ mode }: Props) => {
                     </Tooltip>
 
                     <Tooltip label='Encontros' openDelay={700}>
-                        <button className='text-gray-600 outline-none  hover:text-mainbluehover transition-all' >
-                            <MdOutlineBusinessCenter size={30} />
-                        </button>
+                        <Link
+                            href='/dashboard/meetings/in-progress'
+                            className={`${pathname.startsWith('/dashboard/meetings/in-progress') ? 'text-mainblue' : 'text-gray-600'} transition-all hover:text-mainbluehover`}
+                        >
+                            {pathname.startsWith('/dashboard/meetings/in-progress') ? <MdBusinessCenter size={30} /> : <MdOutlineBusinessCenter size={30} />}
+                        </Link>
                     </Tooltip>
 
                     <Tooltip label='Configurações' openDelay={700}>
