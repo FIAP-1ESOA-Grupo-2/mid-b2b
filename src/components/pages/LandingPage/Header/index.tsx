@@ -11,7 +11,7 @@ export const HeaderLP = () => {
     return (
         <header className="bg-white shadow-sm border-b border-b-slate-200 px-0 sm:px-7 h-24 fixed w-full">
             <nav className="flex justify-between items-center max-w-screen-xl sm:mx-auto h-full mx-7">
-                <Image src={LogoHeader} alt="Logo"/>
+                <Image src={LogoHeader} alt="Logo" height={36} />
                 <nav className="hidden xl:block">
                     <ul className="flex gap-10 text-gray-900 text-lg">
                         <li><Link href="#inicio">Início</Link></li>

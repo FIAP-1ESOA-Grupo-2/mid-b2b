@@ -4,8 +4,6 @@ import LogoImg from '@/assets/images/logo.svg'
 import Image from 'next/image'
 import { MdHome, MdMenu } from "react-icons/md";
 import { MdOutlineHome } from "react-icons/md";
-import { MdNotificationsNone } from "react-icons/md";
-import { MdNotifications } from "react-icons/md";
 import { MdOutlineBusinessCenter } from "react-icons/md";
 import { BiUser } from "react-icons/bi";
 import { BiSolidUser } from "react-icons/bi";
@@ -14,7 +12,6 @@ import { MdOutlineSettings } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { HiOutlineMenu } from "react-icons/hi";
 import { Tooltip } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useApp';
 import { setLeftSidebarDesktopToggle, setLeftSidebarMobileToggle } from '@/redux/reducers/appReducer';
