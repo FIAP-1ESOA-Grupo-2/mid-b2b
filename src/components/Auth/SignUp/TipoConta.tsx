@@ -9,7 +9,7 @@ import { goToNextStep, setData } from '@/redux/reducers/signUpReducer';
 
 export const TipoConta = () => {
     const dispatch = useAppDispatch()
-    const signUpData  = useAppSelector(state => state.signUp.data)
+    const signUpData = useAppSelector(state => state.signUp.data)
 
     const handleButtonClick = (value: UserAccountType) => {
         dispatch(setData({ ...signUpData, accountType: value }));
@@ -18,11 +18,6 @@ export const TipoConta = () => {
 
     return (
         <section className="sm:flex flex-col mx-auto  mt-12 justify-center">
-            {/*#TODO Alterar imagem dos logos*/}
-
-            <div className="ml-10 mt-10 lg:hidden">
-                <Image src={logoteste} alt="logo teste" />
-            </div>
             <section className="flex flex-col items-center justify-center p-4  ">
                 <Image src={imageMobile} alt="Ilustração" className="mx-auto" />
 
