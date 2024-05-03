@@ -14,25 +14,25 @@ export const Frame2 = () => {
                 <p className="text-gray-500 text-sm md:text-xl">Nossa plataforma agiliza sua busca por conexões comerciais significativas, economizando o seu tempo em potenciais parcerias, inovações e negócios.</p>
             </section>
             <section className="flex flex-col-reverse justify-center items-center lg:flex-row lg:gap-40 mb-24">
-                <Image src={LP2} alt="Ilustração" className="w-64 h-60 md:w-fit md:h-fit"/>
+                <Image src={LP2} alt="Ilustração" className="w-64 h-60 md:w-fit md:h-fit" />
                 <ul className="flex flex-col gap-8">
-                    <TypeList 
+                    <TypeList
                         icon={NetIcon}
                         alt="Icone"
-                        title="Networking" 
-                        paragraph="Conecte-se com líderes do seu setor por meio de encontros selecionados, promovendo relacionamentos e aumentando seu conhecimento."/
+                        title="Networking"
+                        paragraph="Conecte-se com líderes do seu setor por meio de encontros selecionados, promovendo relacionamentos e aumentando seu conhecimento." /
                     >
-                    <TypeList 
+                    <TypeList
                         icon={NetNeg}
                         alt="Icone"
-                        title="Negócios" 
-                        paragraph="Nossa plataforma combina perfeitamente você com potenciais colaboradores, abrindo portas para novos empreendimentos e inovações."/
+                        title="Negócios"
+                        paragraph="Nossa plataforma combina perfeitamente você com potenciais colaboradores, abrindo portas para novos empreendimentos e inovações." /
                     >
-                    <TypeList 
+                    <TypeList
                         icon={NetPar}
                         alt="Icone"
-                        title="Parcerias" 
-                        paragraph="Criação de parcerias estratégicas, conectando você com os executivos ideais para impulsionar o sucesso mútuo e a inovação. Descubra o potencial em cada conexão."/
+                        title="Parcerias"
+                        paragraph="Criação de parcerias estratégicas, conectando você com os executivos ideais para impulsionar o sucesso mútuo e a inovação. Descubra o potencial em cada conexão." /
                     >
                 </ul>
             </section>
