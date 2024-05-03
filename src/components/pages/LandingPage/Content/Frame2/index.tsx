@@ -9,7 +9,7 @@ export const Frame2 = () => {
     return (
         <section id="porqueusar" className="mx-7 px-7 xl:px-0 py-2 max-w-screen-xl lg:mx-auto flex flex-col items-center justify-center">
             <section className="flex flex-col mb-12 gap-2 md:text-center">
-                <h2 className="text-mainblue text-xs font-semibold md:text-xl">Por que usar LinkedIn</h2>
+                <h2 className="text-mainblue text-xs font-semibold md:text-xl">Por que usar Align Meet</h2>
                 <h1 className="text-gray-950 text-2xl md:text-4xl md:mb-6">Economiza seu tempo e abre oportunidades</h1>
                 <p className="text-gray-500 text-sm md:text-xl">Nossa plataforma agiliza sua busca por conexões comerciais significativas, economizando o seu tempo em potenciais parcerias, inovações e negócios.</p>
             </section>
